@@ -32,10 +32,10 @@ int	main(int argc, char **argv, char **envp)
 			free(input);
 			continue ;
 		}
-		/* ✔ El handler no llama a funciones no–async-safe → solo pone g_signal = sig
-✔ Utilizas rl_done = 1 para forzar que readline() termine → comportamiento limpio
-✔ En el bucle principal procesas la señal correctamente
-✔ No violas la regla del subject (solo 1 global y no usas estructuras globales)*/
+		/* The handler doesn't call non-async-safe functions → it only sets g_signal = sig
+✔ You use rl_done = 1 to force readline() to finish → clean behavior
+✔ In the main loop, you process the signal correctly
+✔ You don't violate the subject rule (only 1 global and no global structures)*/
 		if (*input)
 			add_history(input);
 		ts = lex_line(input);

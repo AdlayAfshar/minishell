@@ -1,6 +1,6 @@
 
 #include "../include/minishell.h"
-#include <signals.h>
+#include "../include/signal.h"
 
 volatile int g_signal = 0;
 
@@ -10,32 +10,33 @@ static void	sigint_handler(int sig)
 	g_signal = sig;
 	rl_done = 1;
 }
-/*✔ Guarda la señal en la global
-✔ rl_done = 1 hace que readline termine inmediatamente → perfecto*/
-/*static void	sigquit_handler(int sig)
+/*Saves the signal to the global memory
+ rl_done = 1 makes readline terminate immediately → perfect*/
+/*static void sigquit_handler(int sig)
 {
-	(void)sig;
-} - no needed */
+(void)sig;
+
+}
+} - not needed */
 
 void	handle_signals(void)
 {
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);//sigquit_handler);
 }
-/* Configuración de señales. Esto es aún mejor: hace que Ctrl-\ literalmente no haga nada, como bash.
+/*Signal configuration. This is even better: it makes Ctrl-\ literally do nothing, like bash.
 
-No necesitas ya sigquit_handler.*/
-/*
-Usuario pulsa Ctrl-C
+You no longer need sigquit_handler.*/
+/* User presses Ctrl-C
 
-sigint_handler se ejecuta
+sigquit_handler executes
 
-rl_done = 1 → readline termina
+rl_done = 1 → readline ends
 
-Vuelves al loop principal con line = NULL o con cadena vacía
+Return to the main loop with line = NULL or an empty string
 
-Tu código detecta que g_signal == SIGINT
+Your code detects that g_signal == SIGINT
 
-Limpiamos línea, imprimimos newline y refrescamos prompt
+Clear line, print newline, and refresh prompt
 
-continue → va al siguiente ciclo → nuevo prompt como bash*/
+continue → goes to the next loop → new prompt like bash*/

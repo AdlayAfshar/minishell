@@ -1,6 +1,7 @@
 
 #include "../include/minishell.h"
 
+extern volatile int g_signal;
 //---------------------------------execve----------------------------------
 
 int	main(int argc, char **argv, char **envp)
@@ -20,6 +21,21 @@ int	main(int argc, char **argv, char **envp)
 			printf("exit\n");
 			break ;
 		}
+		if(g_signal == SIGINT)
+		{
+			g_signal = 0;
+			rl_done = 0;
+			write(1, "\n", 1);
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			rl_redisplay();
+			free(input);
+			continue ;
+		}
+		/* ✔ El handler no llama a funciones no–async-safe → solo pone g_signal = sig
+✔ Utilizas rl_done = 1 para forzar que readline() termine → comportamiento limpio
+✔ En el bucle principal procesas la señal correctamente
+✔ No violas la regla del subject (solo 1 global y no usas estructuras globales)*/
 		if (*input)
 			add_history(input);
 		ts = lex_line(input);

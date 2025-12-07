@@ -2,14 +2,19 @@ NAME = minishell
 
 SRCS	= src/main.c \
 		  src/signals.c \
-		  src/lexer/lexer.c \
-		  src/lexer/tokens.c \
-		  src/parser/parser.c \
+		  src/lexer/lexer_lex.c \
+		  src/lexer/lexer_op.c \
+		  src/lexer/lexer_tokens.c \
+		  src/lexer/lexer_utils.c \
+		  src/lexer/lexer_word.c \
+		  src/parser/parser_args.c \
+		  src/parser/parser_cmd.c \
+		  src/parser/parser_main.c \
 		  src/parser/ast.c \
       	  src/exec/exec_pipeline.c
 
 OBJS = $(SRCS:.c=.o)
-INCS = -I include
+INCS = -I include -I libft
 
 COMP = cc
 CFLAGS = -Wall -Wextra -Werror -g

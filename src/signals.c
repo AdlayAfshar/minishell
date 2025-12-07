@@ -1,5 +1,15 @@
 
 #include "../include/minishell.h"
+#include <readline/readline.h>
+#include <readline/history.h>
+
+#ifdef __APPLE__
+void    rl_replace_line(const char *text, int clear_undo)
+{
+    (void)text;
+    (void)clear_undo;
+}
+#endif
 
 static void	sigint_handler(int sig)
 {

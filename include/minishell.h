@@ -1,17 +1,8 @@
 
-// #ifndef MINISHELL_H
-// # define MINISHELL_H
-
-// # include <unistd.h>
-// # include <fcntl.h>
-// # include <stdlib.h>
-// # include <sys/wait.h>
-// # include <stdio.h>
-// # include "./libft/libft.h"
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "../libft/libft.h"
 # include "lexer.h"
 # include "parser.h"
 # include <readline/history.h>
@@ -21,8 +12,9 @@
 # include <stdlib.h>
 # include <string.h>
 # include <sys/wait.h>
-# include <unistd.h>
 
 void	handle_signals(void);
+void	exec_pipeline(t_cmd *cmds, char **envp);
+// void    rl_replace_line(const char *text, int clear_undo);
 
 #endif

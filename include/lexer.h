@@ -1,11 +1,19 @@
 #ifndef LEXER_H
 # define LEXER_H
 
-# include <stdlib.h>
+# include <stddef.h>
+// # include <stdlib.h>
+// # include <unistd.h>
+// # include <stdio.h>
+// # include <readline/readline.h>
+// # include <readline/history.h>
+// # include "libft.h"
+
+// tokens 
 
 typedef enum e_tok_type
 {
-	TOK_WORD = 0,
+	TOK_WORD,
 	TOK_PIPE,
 	TOK_REDIR_IN,
 	TOK_REDIR_OUT,
@@ -20,12 +28,26 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-/* ساخت/مدیریت توکن‌ها */
-t_token	*tok_new(t_tok_type type, const char *val, size_t len);
-void	tok_push(t_token **lst, t_token *node);
-void	free_tokens(t_token *t);
+// buffer used while reading a word
+typedef struct s_wbuf
+{
+	char	*data;
+	size_t	len;
+	size_t	cap;
+}	t_wbuf;
 
-/* لکسینگ خط ورودی */
+
 t_token	*lex_line(const char *s);
+void	token_list_clear(t_token **lst);
+
+int	    is_space(char c);
+void	skip_spaces(const char *s, size_t *i);
+int		is_op_char(char c);
+char	*read_word(const char *s, size_t *i);
+int		process_word_char(const char *s, size_t *i, t_wbuf *b);
+int		lex_try_operator(const char *s, size_t *i, t_token **lst);
+
+t_token	*token_new(char *value, t_tok_type type);
+void	token_add_back(t_token **lst, t_token *new);
 
 #endif

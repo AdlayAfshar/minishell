@@ -49,7 +49,7 @@ int	main(int argc, char **argv, char **envp)
 				exec_pipeline(pl, envp);
 				free_cmds(pl);
 			}
-			free_tokens(ts);
+			token_list_clear(&ts);
 		}
 		free(input);
 	}
@@ -131,7 +131,7 @@ int	main(int argc, char **argv, char **envp)
 // 				print_cmds(pl);
 // 				free_cmds(pl);
 // 			}
-// 			free_tokens(ts);
+// 			token_list_clear(&ts);
 // 		}
 // 		free(input);
 // 	}
@@ -176,6 +176,13 @@ int	main(int argc, char **argv, char **envp)
 // 		ts = lex_line(input);
 // 		if (!ts)
 // 			fprintf(stderr, "minishell: lexer error (unclosed quote?)\n");
+		
+// 		/*
+// 			We assign `cur = ts` because `ts` must always point to the head of the
+// 			token list. We traverse the list using `cur` so that we don't lose the
+// 			original pointer. If we advanced `ts` directly, we would lose access to
+// 			the list and would not be able to free it or reuse it later.
+// 		*/
 // 		cur = ts;
 // 		while (cur)
 // 		{
@@ -187,7 +194,7 @@ int	main(int argc, char **argv, char **envp)
 // 		}
 // 		if (ts)
 // 			printf("\n");
-// 		free_tokens(ts);
+// 		token_list_clear(&ts);
 // 		free(input);
 // 	}
 // 	return (0);
@@ -213,3 +220,44 @@ int	main(int argc, char **argv, char **envp)
 // 	}
 // 	return (0);
 // }
+
+// minishell> echo "hello world"
+// 			[WORD:"echo"] [WORD:""hello world""] 
+// minishell> echo "hello world" | grep hello >> out.txt
+// 			[WORD:"echo"] [WORD:""hello world""] [PIPE] [WORD:"grep"] [WORD:"hello"] [APPEND] [WORD:"out.txt"] 
+// minishell> ls -la
+// 			[WORD:"ls"] [WORD:"-la"] 
+// minishell> echo hi>file
+// 			[WORD:"echo"] [WORD:"hi"] [REDIR_OUT] [WORD:"file"] 
+// minishell> echo hi
+// 			[WORD:"echo"] [WORD:"hi"] 
+// minishell> ls -la /usr/bin
+// 			[WORD:"ls"] [WORD:"-la"] [WORD:"/usr/bin"] 
+// minishell> echo hello | grep h
+// 			[WORD:"echo"] [WORD:"hello"] [PIPE] [WORD:"grep"] [WORD:"h"] 
+// minishell> echo hi|grep h
+// 			[WORD:"echo"] [WORD:"hi"] [PIPE] [WORD:"grep"] [WORD:"h"] 
+// minishell> cat < file
+// 			[WORD:"cat"] [REDIR_IN] [WORD:"file"] 
+// minishell> echo hi >> log.txt
+// 			[WORD:"echo"] [WORD:"hi"] [APPEND] [WORD:"log.txt"] 
+// minishell> echo hi>file>
+// 			[WORD:"echo"] [WORD:"hi"] [REDIR_OUT] [WORD:"file"] [REDIR_OUT]
+// minishell> echo "hello world"
+// 			[WORD:"echo"] [WORD:""hello world""] 
+// minishell> echo "a|b" | grep b
+// 			[WORD:"echo"] [WORD:""a|b""] [PIPE] [WORD:"grep"] [WORD:"b"] 
+// minishell> cat << EOF
+// 			[WORD:"cat"] [HEREDOC] [WORD:"EOF"] 
+// minishell> cat < infile | grep foo >> results.txt
+// 			[WORD:"cat"] [REDIR_IN] [WORD:"infile"] [PIPE] [WORD:"grep"] [WORD:"foo"] [APPEND] [WORD:"results.txt"] 
+// minishell>  
+// 			minishell: lexer error (unclosed quote?)
+// minishell> | ls
+// 			[PIPE] [WORD:"ls"] 
+// minishell> cat<<EOF>>out
+// 			[WORD:"cat"] [HEREDOC] [WORD:"EOF"] [APPEND] [WORD:"out"] 
+// minishell> echo "'hello'"
+// 			[WORD:"echo"] [WORD:""'hello'""] 
+// minishell> cmd1|cmd2 < in > out
+// 			[WORD:"cmd1"] [PIPE] [WORD:"cmd2"] [REDIR_IN] [WORD:"in"] [REDIR_OUT] [WORD:"out"] 

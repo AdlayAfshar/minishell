@@ -1,13 +1,39 @@
 #include "minishell.h"
 
 // match operator at position i and set how many chars were consumed 
+// static t_tok_type	match_op(const char *s, size_t i, size_t *consumed)
+// {
+// 	*consumed = 1;
+// 	if (s[i] == '|')
+// 		return (TOK_PIPE);
+// 	if (s[i] == ';')
+// 		return (TOK_SEMI);
+// 	if (s[i] == '<' && s[i + 1] == '<')
+// 	{
+// 		*consumed = 2;
+// 		return (TOK_HEREDOC);
+// 	}
+// 	if (s[i] == '>' && s[i + 1] == '>')
+// 	{
+// 		*consumed = 2;
+// 		return (TOK_APPEND);
+// 	}
+// 	if (s[i] == '<')
+// 		return (TOK_REDIR_IN);
+// 	if (s[i] == '>')
+// 		return (TOK_REDIR_OUT);
+// 	*consumed = 0;
+// 	return (TOK_WORD);
+// }
+
 static t_tok_type	match_op(const char *s, size_t i, size_t *consumed)
 {
 	*consumed = 1;
 	if (s[i] == '|')
 		return (TOK_PIPE);
-	if (s[i] == ';')
-		return (TOK_SEMI);
+	// حذف این:
+	// if (s[i] == ';')
+	// 	return (TOK_SEMI);
 	if (s[i] == '<' && s[i + 1] == '<')
 	{
 		*consumed = 2;

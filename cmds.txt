@@ -1,0 +1,104 @@
+
+..append_char                         :expand_word_utils.c
+..append_env_var             static   :env_utils.c
+..append_str                          :expand_word_utils.c
+..apply_redirs                        :exec_redir.c
+..apply_single_redir         static   :exec_redir.c
+..builtin_cd                          :builtin_cd.c 
+..builtin_echo                        :builtin_echo.c
+..builtin_env                         :builtin_env.c
+..builtin_exit                        :builtin_exit.c
+..builtin_export                      :builtin_export.c
+..builtin_pwd                         :builtin_pwd.c
+..builtin_unset                       :env_unset.c
+
+..change_dir                 static   :builtin_cd.c 
+..child_side                          :exec_pipeline_utils.c
+..copy_key_to_buf                     :env_env.c
+..copy_val_to_buf                     :env_env.c
+..count_cmds                          :exec_pipeline.c
+
+..dup_env                             :env_env.c
+..dup_stdio                  static   :exec_builtin.c
+
+..env_count                  static   :env_unset.c
+
+..exec_builtin                        :exec_builtin.c
+..exec_child_builtin         static   :exec_child.c
+..exec_cmd_child                      :exec_child.c
+..exec_external              static   :exec_child.c
+..exec_pipeline                       :exec_pipeline.c
+
+..exit_error                 static   :builtin_exit.c
+..expand_all                          :expand_cmd.c
+..expand_argv                static   :expand_cmd.c
+..expand_cmd_list            static   :expand_cmd.c
+..expand_dollar              static   :expand_word.c
+..expand_env_var                      :expand_word_utils.c
+..expand_redirs              static   :expand_cmd.c
+..expand_status                       :expand_word_utils.c
+..expand_word                         :expand_word.c
+
+..exp_get_env_val                     :expand_utils.c
+
+..find_env_index             static   :env_unset.c \ env_utils.c
+..free_env_array             static   :env_env.c
+..free_env                            :env_env.c
+..free_split                 static   :exec_path.c
+..find_in_path               static   :exec_path.c
+..fork_or_fail                        :exec_pipeline_utils.c
+..grow_buf                            :expand_word_utils.c
+
+..handle_dollar_or_char      static   :epand_word.c
+..handle_exit_args           static   :builtin_exit.c
+..handle_no_equal            static   :builtin_export.c
+..handle_quotes              static   :expand_word.c
+..handle_with_equal          static   :builtin_export.c
+
+..init_exp                   static   :expand_word.c
+..init_spawn                 static   :exec_pipeline_spawn.c 
+..is_builtin_name                     :exec_builtin.c
+
+..is_flag_n                  static   :builtin_echo.c
+
+..is_name                    static   :exec_child.c
+..is_numeric                 static   :builtin_exit.c
+
+..is_str                     static   :exec_builtin.c
+
+..is_valid_key                        :builtins_utils.c
+..is_var_char                         :expand_utils.c
+..is_var_start                        :expand_utils.c
+
+
+..join_path                  static   :exec_path.c
+
+..make_env_pair              static   :env_utils.c
+
+..open_for_redir             static   :exec_redir.c
+..open_heredoc_file          static   :exec_redir.c
+
+..parent_side                         :exec_pipeline_utils.c
+..pipe_or_init                        :exec_pipeline_utils.c
+..print_cd_error             static   :builtin_cd.c 
+..print_env                  static   :builtin_env.c
+..print_export_error         static   :builtin_export.c
+..print_export_list          static   :builtin_export.c
+
+..print_words                static   :builtin_echo.c
+
+..remove_index               static   :env_unset.c
+..replace_env                static   :env_utils.c
+..run_builtin_cmd                     :exec_builtin.c
+..run_single_builtin         static   :exec_pipeline.c
+
+..search_paths               static   :exec_path.c
+..set_env_var                         :env_utils.c
+..setup_child_fds            static   :exec_child.c
+..spawn_one                  static   :exec_pipeline_spawn.c 
+..spawn_cmds                          :exec_pipeline_spawn.c 
+
+..unset_key                  static   :env_unset.c
+
+..update_pwd_vars            static   :builtin_cd.c 
+..wait_for_children          static   :exec_pipeline_utils.c

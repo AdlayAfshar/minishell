@@ -6,6 +6,8 @@ static t_tok_type	match_op(const char *s, size_t i, size_t *consumed)
 	*consumed = 1;
 	if (s[i] == '|')
 		return (TOK_PIPE);
+	if (s[i] == ';')
+		return (TOK_SEMI);
 	if (s[i] == '<' && s[i + 1] == '<')
 	{
 		*consumed = 2;

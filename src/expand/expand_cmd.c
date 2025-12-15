@@ -22,27 +22,6 @@ static int	expand_argv(char ***pargv, char **envp, int last_status)
 	return (0);
 }
 
-// static int	expand_redirs(t_redir *r, char **envp, int last_status)
-// {
-// 	char	*new;
-
-// 	while (r)
-// 	{
-// 		if (r->type == R_HEREDOC && r->heredoc_quoted)
-// 		{
-// 			r = r->next;
-// 			continue ;
-// 		}
-// 		new = expand_word(r->target, envp, last_status);
-// 		if (!new)
-// 			return (1);
-// 		free(r->target);
-// 		r->target = new;
-// 		r = r->next;
-// 	}
-// 	return (0);
-// }
-
 static int	expand_redirs(t_redir *r, char **envp, int last_status)
 {
 	char	*new;

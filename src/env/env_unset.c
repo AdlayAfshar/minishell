@@ -31,34 +31,6 @@ int	find_env_index(char **envp, const char *key)
 	return (-1);
 }
 
-// static int	remove_index(char ***envp, int idx)
-// {
-// 	char	**new_env;
-// 	int		i;
-// 	int		j;
-
-// 	new_env = (char **)malloc(sizeof(char *) * (env_count(*envp) + 1));
-// 	if (!new_env)
-// 		return (1);
-// 	i = 0;
-// 	j = 0;
-// 	while ((*envp)[i])
-// 	{
-// 		if (i != idx)
-// 		{
-// 			new_env[j] = (*envp)[i];
-// 			j++;
-// 		}
-// 		else
-// 			free((*envp)[i]);
-// 		i++;
-// 	}
-// 	new_env[j] = NULL;
-// 	free(*envp);
-// 	*envp = new_env;
-// 	return (0);
-// }
-
 static int	remove_index(char ***envp, int idx)
 {
 	char	**new_env;

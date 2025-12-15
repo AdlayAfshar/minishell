@@ -62,11 +62,35 @@ static int	parse_word(t_token **ts, t_cmd *cur, t_cmd **pipe)
 	return (0);
 }
 
+// static int	parse_handle_token(t_token **ts, t_cmd **cur, t_cmd **pipe)
+// {
+// 	t_redir_type	dummy;
+// 	int				r;
+
+// 	if ((*ts)->type == TOK_PIPE)
+// 		return (parse_pipe(ts, cur, pipe));
+// 	if (tok_to_redir((*ts)->type, &dummy))
+// 	{
+// 		r = parse_redir(ts, *cur, pipe);
+// 		if (r != 2)
+// 			return (r);
+// 		return (0);
+// 	}
+// 	if ((*ts)->type == TOK_WORD)
+// 		return (parse_word(ts, *cur, pipe));
+// 	return (syntax_err(NULL, pipe));
+// }
+
 static int	parse_handle_token(t_token **ts, t_cmd **cur, t_cmd **pipe)
 {
 	t_redir_type	dummy;
 	int				r;
 
+	if ((*ts)->type == TOK_SEMI)
+	{
+		*ts = (*ts)->next;
+		return (0);
+	}
 	if ((*ts)->type == TOK_PIPE)
 		return (parse_pipe(ts, cur, pipe));
 	if (tok_to_redir((*ts)->type, &dummy))

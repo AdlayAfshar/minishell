@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include <errno.h>
 
 static int	is_name(const char *n, const char *s)
 {
@@ -52,11 +53,37 @@ static void	setup_child_fds(int in_fd, int out_fd)
 	}
 }
 
+// static void	exec_external(t_cmd *cmd, char **envp)
+// {
+// 	char	*path;
+
+// 	// path = find_in_path(cmd->argv[0]);
+// 	path = find_in_path(cmd->argv[0], envp);
+// 	if (!path)
+// 	{
+// 		write(2, "minishell: command not found\n", 29);
+// 		exit(127);
+// 	}
+// 	execve(path, cmd->argv, envp);
+// 	perror(path);
+// 	free(path);
+// 	exit(126);
+// }
+
+static void	exec_with_sh(char *path, char **envp)
+{
+	char	*av[3];
+
+	av[0] = "/bin/sh";
+	av[1] = path;
+	av[2] = NULL;
+	execve("/bin/sh", av, envp);
+}
+
 static void	exec_external(t_cmd *cmd, char **envp)
 {
 	char	*path;
 
-	// path = find_in_path(cmd->argv[0]);
 	path = find_in_path(cmd->argv[0], envp);
 	if (!path)
 	{
@@ -64,6 +91,8 @@ static void	exec_external(t_cmd *cmd, char **envp)
 		exit(127);
 	}
 	execve(path, cmd->argv, envp);
+	if (errno == ENOEXEC)
+		exec_with_sh(path, envp);
 	perror(path);
 	free(path);
 	exit(126);

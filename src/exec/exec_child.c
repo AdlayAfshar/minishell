@@ -80,9 +80,28 @@ static void	exec_with_sh(char *path, char **envp)
 	execve("/bin/sh", av, envp);
 }
 
+// static void	exec_external(t_cmd *cmd, char **envp)
+// {
+// 	char	*path;
+
+// 	path = find_in_path(cmd->argv[0], envp);
+// 	if (!path)
+// 	{
+// 		write(2, "minishell: command not found\n", 29);
+// 		exit(127);
+// 	}
+// 	execve(path, cmd->argv, envp);
+// 	if (errno == ENOEXEC)
+// 		exec_with_sh(path, envp);
+// 	perror(path);
+// 	free(path);
+// 	exit(126);
+// }
+
 static void	exec_external(t_cmd *cmd, char **envp)
 {
 	char	*path;
+	int		e;
 
 	path = find_in_path(cmd->argv[0], envp);
 	if (!path)
@@ -91,10 +110,15 @@ static void	exec_external(t_cmd *cmd, char **envp)
 		exit(127);
 	}
 	execve(path, cmd->argv, envp);
-	if (errno == ENOEXEC)
+	e = errno;
+	if (e == ENOEXEC)
 		exec_with_sh(path, envp);
 	perror(path);
 	free(path);
+	if (e == ENOENT)
+		exit(127);
+	if (e == EACCES || e == EISDIR)
+		exit(126);
 	exit(126);
 }
 

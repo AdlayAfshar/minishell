@@ -91,13 +91,13 @@ int	process_word_char(const char *s, size_t *i, t_wbuf *b)
 {
 	if (s[*i] == '\'' || s[*i] == '\"')
 		return (read_quoted(s, i, b));
-	if (s[*i] == '\\' && s[*i + 1])
-	{
-		if (word_append_char(b, s[*i + 1]) < 0)
-			return (-1);
-		*i += 2;
-		return (0);
-	}
+	// if (s[*i] == '\\' && s[*i + 1])
+	// {
+	// 	if (word_append_char(b, s[*i + 1]) < 0)
+	// 		return (-1);
+	// 	*i += 2;
+	// 	return (0);
+	// }
 	if (word_append_char(b, s[*i]) < 0)
 		return (-1);
 	(*i)++;

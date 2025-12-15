@@ -10,6 +10,20 @@ static void	init_exp(t_exp *e, char **envp, int last_status)
 	e->last_status = last_status;
 }
 
+// static int	expand_dollar(const char *s, size_t *i, t_exp *e)
+// {
+// 	(*i)++;
+// 	if (!s[*i])
+// 		return (append_char(e, '$'));
+// 	if (s[*i] == '?')
+// 		return (expand_status(i, e));
+// 	if (!is_var_start(s[*i]))
+// 		return (append_char(e, '$'));
+// 	if (expand_env_var(s, i, e))
+// 		return (1);
+// 	return (0);
+// }
+
 static int	expand_dollar(const char *s, size_t *i, t_exp *e)
 {
 	(*i)++;
@@ -17,6 +31,11 @@ static int	expand_dollar(const char *s, size_t *i, t_exp *e)
 		return (append_char(e, '$'));
 	if (s[*i] == '?')
 		return (expand_status(i, e));
+	if (ft_isdigit((unsigned char)s[*i]))
+	{
+		(*i)++;
+		return (0);
+	}
 	if (!is_var_start(s[*i]))
 		return (append_char(e, '$'));
 	if (expand_env_var(s, i, e))

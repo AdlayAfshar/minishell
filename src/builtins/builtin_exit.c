@@ -61,7 +61,6 @@ int	builtin_exit(char **argv)
 	int	status;
 	int	should_exit;
 
-	write(1, "exit\n", 5);
 	status = handle_exit_args(argv, &should_exit);
 	if (should_exit)
 		exit(status);

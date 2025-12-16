@@ -33,19 +33,31 @@ static int	hd_wait_result(pid_t pid, int *out_status)
 	return (0);
 }
 
-static int	hd_apply_status(int status, char *fname)
+// static int	hd_apply_status(int status, char *fname)
+// {
+// 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+// 	{
+// 		g_exit_status = 130;
+// 		free(fname);
+// 		return (2);
+// 	}
+// 	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
+// 	{
+// 		free(fname);
+// 		return (1);
+// 	}
+// 	return (0);
+// }
+
+static int	hd_apply_status(int status)
 {
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
 		g_exit_status = 130;
-		free(fname);
 		return (2);
 	}
 	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
-	{
-		free(fname);
 		return (1);
-	}
 	return (0);
 }
 
@@ -76,11 +88,28 @@ static int	hd_make_and_open(t_hd *h, char **out_name)
 	return (0);
 }
 
-static int	hd_fork_and_wait(t_hd *h, char *fname)
+// static int	hd_fork_and_wait(t_hd *h, char *fname)
+// {
+// 	pid_t	pid;
+// 	int		status;
+// 	int		res;
+
+// 	pid = fork();
+// 	if (pid < 0)
+// 		return (perror("fork"), 1);
+// 	if (pid == 0)
+// 		hd_child_run(h);
+// 	close(h->fd);
+// 	if (hd_wait_result(pid, &status))
+// 		return (1);
+// 	res = hd_apply_status(status, fname);
+// 	return (res);
+// }
+
+static int	hd_fork_and_wait(t_hd *h)
 {
 	pid_t	pid;
 	int		status;
-	int		res;
 
 	pid = fork();
 	if (pid < 0)
@@ -90,8 +119,7 @@ static int	hd_fork_and_wait(t_hd *h, char *fname)
 	close(h->fd);
 	if (hd_wait_result(pid, &status))
 		return (1);
-	res = hd_apply_status(status, fname);
-	return (res);
+	return (hd_apply_status(status));
 }
 
 static void	hd_cleanup_parent(t_hd *h)
@@ -123,10 +151,16 @@ int	process_heredoc(t_redir *r, char **envp, int last_status)
 		return (1);
 	if (hd_make_and_open(&h, &fname))
 		return (hd_cleanup_parent(&h), 1);
-	res = hd_fork_and_wait(&h, fname);
+	// res = hd_fork_and_wait(&h, fname);
+	// free(h.delim);
+	// if (res != 0)
+	// 	return (free(fname), res);
+	// return (hd_set_target(r, fname));
+	res = hd_fork_and_wait(&h);
 	free(h.delim);
+	h.delim = NULL;
 	if (res != 0)
-		return (free(fname), res);
+		return (unlink(fname), free(fname), res);
 	return (hd_set_target(r, fname));
 }
 

@@ -23,7 +23,9 @@ int		hd_write_line(int fd, const char *s);
 int		hd_read_loop(t_hd *h);
 
 /* process + setup */
-int		process_heredoc(t_redir *r, char **envp, int last_status);
-int		setup_heredocs(t_cmd *cmds, char **envp, int last_status);
+// int		process_heredoc(t_redir *r, char **envp, int last_status);
+int     process_heredoc(t_redir *r, char **envp, int *last_status);
+// int		setup_heredocs(t_cmd *cmds, char **envp, int last_status);
+int		setup_heredocs(t_cmd *cmds, char **envp, int *last_status);
 
 #endif

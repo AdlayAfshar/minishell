@@ -13,7 +13,33 @@ static int	is_name(const char *n, const char *s)
 	return (1);
 }
 
-static int	exec_child_builtin(t_cmd *cmd, char ***envp)
+// static int	exec_child_builtin(t_cmd *cmd, char ***envp)
+// {
+// 	char	**av;
+// 	char	*n;
+
+// 	av = cmd->argv;
+// 	if (!av || !av[0])
+// 		return (-1);
+// 	n = av[0];
+// 	if (is_name(n, "echo"))
+// 		return (builtin_echo(av));
+// 	if (is_name(n, "env"))
+// 		return (builtin_env(av, *envp));
+// 	if (is_name(n, "export"))
+// 		return (builtin_export(av, envp));
+// 	if (is_name(n, "exit"))
+// 		return (builtin_exit(av));
+// 	if (is_name(n, "cd"))
+// 		return (builtin_cd(av, envp));
+// 	if (is_name(n, "pwd"))
+// 		return (builtin_pwd(av));
+// 	if (is_name(n, "unset"))
+// 		return (builtin_unset(av, envp));
+// 	return (-1);
+// }
+
+static int	exec_child_builtin(t_cmd *cmd, t_execctx *x)
 {
 	char	**av;
 	char	*n;
@@ -25,17 +51,17 @@ static int	exec_child_builtin(t_cmd *cmd, char ***envp)
 	if (is_name(n, "echo"))
 		return (builtin_echo(av));
 	if (is_name(n, "env"))
-		return (builtin_env(av, *envp));
+		return (builtin_env(av, *(x->envp)));
 	if (is_name(n, "export"))
-		return (builtin_export(av, envp));
-	if (is_name(n, "exit"))
-		return (builtin_exit(av));
+		return (builtin_export(av, x->envp));
+	if (is_name(n, "unset"))
+		return (builtin_unset(av, x->envp));
 	if (is_name(n, "cd"))
-		return (builtin_cd(av, envp));
+		return (builtin_cd(av, x->envp));
 	if (is_name(n, "pwd"))
 		return (builtin_pwd(av));
-	if (is_name(n, "unset"))
-		return (builtin_unset(av, envp));
+	if (is_name(n, "exit"))
+		return (builtin_exit(av, *(x->last_status)));
 	return (-1);
 }
 
@@ -122,7 +148,29 @@ static void	exec_external(t_cmd *cmd, char **envp)
 	exit(126);
 }
 
-void	exec_cmd_child(t_cmd *cmd, int in_fd, int out_fd, char **envp)
+// void	exec_cmd_child(t_cmd *cmd, int in_fd, int out_fd, char **envp)
+// {
+// 	int	status;
+
+// 	set_sig_child_default();
+// 	setup_child_fds(in_fd, out_fd);
+// 	if (apply_redirs(cmd->redirs) < 0)
+// 		exit(1);
+// 	if (!cmd->argv || !cmd->argv[0])
+// 		exit(0);
+// 	status = exec_child_builtin(cmd, &envp);
+// 	// if (status != -1)
+// 	// 	exit(status);
+// 	if (status != -1)
+// 	{
+// 		if (status >= 1000)
+// 			status -= 1000;
+// 		exit(status);
+// 	}
+// 	exec_external(cmd, envp);
+// }
+
+void	exec_cmd_child(t_cmd *cmd, int in_fd, int out_fd, t_execctx *x)
 {
 	int	status;
 
@@ -132,8 +180,12 @@ void	exec_cmd_child(t_cmd *cmd, int in_fd, int out_fd, char **envp)
 		exit(1);
 	if (!cmd->argv || !cmd->argv[0])
 		exit(0);
-	status = exec_child_builtin(cmd, &envp);
+	status = exec_child_builtin(cmd, x);
 	if (status != -1)
-		exit(status);
-	exec_external(cmd, envp);
+	{
+		if (status >= EXIT_REQ_BASE)
+			status -= EXIT_REQ_BASE;
+		exit(status & 255);
+	}
+	exec_external(cmd, *(x->envp));
 }

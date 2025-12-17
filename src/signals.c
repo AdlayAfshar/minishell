@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-extern int	g_exit_status;
+// extern int	g_exit_status;
 
 /*
 ** SIGINT handler در حالت پرامپت (interactive)
@@ -12,7 +12,8 @@ extern int	g_exit_status;
 void	sigint_handler(int sig)
 {
 	(void)sig;
-	g_exit_status = 130;
+	// g_exit_status = 130;
+	g_sig = SIGINT;
 	write(1, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();

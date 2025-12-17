@@ -46,11 +46,18 @@ int	fork_or_fail(pid_t *pids, int i)
 	return (0);
 }
 
-void	child_side(t_cmd *cur, int prev_fd, int pipe_fd[2], char **envp)
+// void	child_side(t_cmd *cur, int prev_fd, int pipe_fd[2], char **envp)
+// {
+// 	if (pipe_fd[1] != -1)
+// 		close(pipe_fd[0]);
+// 	exec_cmd_child(cur, prev_fd, pipe_fd[1], envp);
+// }
+
+void	child_side(t_cmd *cur, int prev_fd, int pipe_fd[2], t_execctx *x)
 {
 	if (pipe_fd[1] != -1)
 		close(pipe_fd[0]);
-	exec_cmd_child(cur, prev_fd, pipe_fd[1], envp);
+	exec_cmd_child(cur, prev_fd, pipe_fd[1], x);
 }
 
 int	parent_side(int prev_fd, int pipe_fd[2])

@@ -14,18 +14,6 @@
 
 #include "libft.h"
 
-size_t	ft_strlen(const char *s)
-{
-	int	count;
-
-	count = 0;
-	while (s[count] != '\0')
-	{
-		count += 1;
-	}
-	return (count);
-}
-
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	unsigned int	i;

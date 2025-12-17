@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yafshar <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: yafshar <yafshar@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 20:02:43 by yafshar           #+#    #+#             */
-/*   Updated: 2025/01/04 18:00:44 by yafshar          ###   ########.fr       */
+/*   Updated: 2025/12/17 20:28:21 by yafshar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,19 +57,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	}
 	ptr[i] = '\0';
 	return (ptr);
-}
-
-char	*ft_strchr(const char *str, int c)
-{
-	while (*str)
-	{
-		if (*str == (char)c)
-			return ((char *)str);
-		str++;
-	}
-	if (*str == (char)c)
-		return ((char *)str);
-	return (NULL);
 }
 
 char	**ft_split(char const *s, char c)

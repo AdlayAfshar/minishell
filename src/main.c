@@ -130,58 +130,68 @@ static void	process_pasted_lines(char *line, char ***envp, int *exit_status)
 	}
 }
 
-int main(int argc, char **argv, char **envp_in)
+int	main(int argc, char **argv, char **envp_in)
 {
 	char	*line;
 	char	**envp;
 	int		exit_status;
 
-	exit_status = 0;
 	(void)argc;
 	(void)argv;
+	exit_status = 0;
 	envp = dup_env(envp_in);
-// 	write(2, "envp_in count = ", 16);
-// ft_putnbr_fd(env_count(envp_in), 2);
-// write(2, "\n", 1);
+	if (!envp)
+		return (1);
 
-// envp = dup_env(envp_in);
-
-// write(2, "envp dup count = ", 17);
-// ft_putnbr_fd(env_count(envp), 2);
-// write(2, "\n", 1);
-/////
 	ms_set_termios();
 	init_interactive_signals();
 	while (1)
 	{
 		line = readline("minishell> ");
-		if (g_sig == SIGINT)
-		{
-			exit_status = 130;
-			g_sig = 0;
-		}
+		consume_sigint_interactive(&exit_status);
 		if (!line)
 		{
 			write(1, "exit\n", 5);
 			break ;
 		}
 		trim_cr(line);
-		// if (line[0] != '\0')
-		// 	add_history(line);
-		// process_line(line, &envp);
-		// process_pasted_lines(line, &envp);
 		process_pasted_lines(line, &envp, &exit_status);
-
-// 		ft_putnbr_fd(env_count(envp), 2);
-// write(2, "  <- before\n", 12);
-
-// process_pasted_lines(line, &envp);
-
-// ft_putnbr_fd(env_count(envp), 2);
-// write(2, "  <- after\n", 11);
-///
 		free(line);
 	}
 	free_env(envp);
 	return (exit_status);
 }
+
+// int main(int argc, char **argv, char **envp_in)
+// {
+// 	char	*line;
+// 	char	**envp;
+// 	int		exit_status;
+
+// 	exit_status = 0;
+// 	(void)argc;
+// 	(void)argv;
+// 	envp = dup_env(envp_in);
+// 	ms_set_termios();
+// 	init_interactive_signals();
+// 	while (1)
+// 	{
+// 		line = readline("minishell> ");
+// 		if (g_sig == SIGINT)
+// 		{
+// 			exit_status = 130;
+// 			g_sig = 0;
+// 		}
+// 		if (!line)
+// 		{
+// 			write(1, "exit\n", 5);
+// 			break ;
+// 		}
+// 		trim_cr(line);
+// 		process_pasted_lines(line, &envp, &exit_status);
+
+// 		free(line);
+// 	}
+// 	free_env(envp);
+// 	return (exit_status);
+// }

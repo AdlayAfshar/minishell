@@ -1,0 +1,24 @@
+# Build artifacts
+minishell
+a.out
+*.o
+*.a
+*.so
+*.dylib
+*.out
+*.exe
+*.dSYM/
+
+# Third-party / subproject outputs
+libft/libft.a
+libft/*.o
+
+# Logs and debugging
+*.log
+vgcore.*
+
+# Editor/tooling
+.vscode/
+.idea/
+*.swp
+*~

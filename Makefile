@@ -13,11 +13,13 @@ SRCS	= src/main.c \
 		  src/parser/ast.c \
 		  src/exec/exec_builtin.c \
       	  src/exec/exec_pipeline.c \
+		  src/exec/exec_spawn.c \
 		  src/exec/exec_pipeline_spawn.c \
 		  src/exec/exec_pipeline_utils.c \
 		  src/exec/exec_child.c \
 		  src/exec/exec_path.c \
 		  src/exec/exec_redir.c \
+		  src/exec/exec_utils.c \
 		  src/builtins/builtin_cd.c \
 		  src/builtins/builtin_echo.c \
 		  src/builtins/builtin_export.c \
@@ -39,6 +41,7 @@ SRCS	= src/main.c \
 		  src/heredoc/hd_process.c \
 		  src/heredoc/hd_setup.c \
 		  src/termios.c
+
 		  
 # 		  src/heredoc/heredoc.c \
 		  src/termios.c

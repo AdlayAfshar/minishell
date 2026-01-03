@@ -56,6 +56,7 @@ static int	hd_handle_line(t_hd *h, char *line)
 	return (0);
 }
 
+// nnn
 int	hd_read_loop(t_hd *h)
 {
 	char	*line;
@@ -63,6 +64,12 @@ int	hd_read_loop(t_hd *h)
 	while (1)
 	{
 		line = readline("> ");
+		if (g_sig == SIGINT)
+		{
+			if (line)
+				free(line);
+			return (2);
+		}
 		if (!line)
 			return (0);
 		if (hd_is_delim(line, h->delim))
@@ -76,3 +83,24 @@ int	hd_read_loop(t_hd *h)
 	}
 	return (0);
 }
+
+// int	hd_read_loop(t_hd *h)
+// {
+// 	char	*line;
+
+// 	while (1)
+// 	{
+// 		line = readline("> ");
+// 		if (!line)
+// 			return (0);
+// 		if (hd_is_delim(line, h->delim))
+// 		{
+// 			free(line);
+// 			break ;
+// 		}
+// 		if (hd_handle_line(h, line))
+// 			return (free(line), 1);
+// 		free(line);
+// 	}
+// 	return (0);
+// }

@@ -36,33 +36,6 @@ static int	word_append_char(t_wbuf *b, char c)
 	return (0);
 }
 
-// read everything inside quotes and append to buffer (without the quotes)
-// handles backslash escapes inside double quotes
-// static int	read_quoted(const char *s, size_t *i, t_wbuf *b)
-// {
-// 	char	q;
-
-// 	q = s[*i];
-// 	(*i)++;
-// 	while (s[*i] && s[*i] != q)
-// 	{
-// 		if (q == '\"' && s[*i] == '\\' && s[*i + 1])
-// 		{
-// 			if (word_append_char(b, s[*i + 1]) < 0)
-// 				return (-1);
-// 			*i += 2;
-// 			continue ;
-// 		}
-// 		if (word_append_char(b, s[*i]) < 0)
-// 			return (-1);
-// 		(*i)++;
-// 	}
-// 	if (!s[*i])
-// 		return (-1);
-// 	(*i)++;
-// 	return (0);
-// }
-
 // read everything inside quotes and append to buffer (INCLUDING the quotes)
 static int	read_quoted(const char *s, size_t *i, t_wbuf *b)
 {
@@ -91,13 +64,6 @@ int	process_word_char(const char *s, size_t *i, t_wbuf *b)
 {
 	if (s[*i] == '\'' || s[*i] == '\"')
 		return (read_quoted(s, i, b));
-	// if (s[*i] == '\\' && s[*i + 1])
-	// {
-	// 	if (word_append_char(b, s[*i + 1]) < 0)
-	// 		return (-1);
-	// 	*i += 2;
-	// 	return (0);
-	// }
 	if (word_append_char(b, s[*i]) < 0)
 		return (-1);
 	(*i)++;
@@ -116,12 +82,20 @@ char	*read_word(const char *s, size_t *i)
 	while (s[*i] && !is_space(s[*i]) && !is_op_char(s[*i]))
 	{
 		r = process_word_char(s, i, &b);
+	// 	process_word_char وقتی -1 می‌دهد یعنی یکی از این‌ها رخ داده:
+	// •	malloc/گسترش buffer fail شده
+	// •	یا کوتیشن باز شده ولی کوتیشن بسته پیدا نشده (EOF رسیده)
 		if (r < 0)
 		{
 			free(b.data);
 			return (NULL);
 		}
 	}
+	// ولی این check یک “ایمنی” است: اگر به هر دلیل loop حتی یک بار هم اجرا نشد، یک رشته‌ی خالی برگردان.
+
+// 	نکته مهم:
+// این طراحی باعث می‌شه که read_word هیچ‌وقت NULL برنگرداند مگر خطا (malloc/quote).
+// یعنی “خالی بودن” را با "" نشان می‌دهد، نه با NULL.
 	if (!b.data)
 		return (ft_strdup(""));
 	b.data[b.len] = '\0';

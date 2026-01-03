@@ -1,4 +1,4 @@
-
+//delete
 #include "minishell.h"
 
 typedef struct s_hd
@@ -161,7 +161,7 @@ static int	process_heredoc(t_redir *r, char **envp, int last_status)
 		return (free(fname), 1);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
-		g_exit_status = 130;
+		// g_exit_status = 130;
 		free(fname);
 		return (2);
 	}

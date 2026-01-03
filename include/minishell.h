@@ -20,6 +20,7 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <termios.h>
+# include <errno.h>
 
 // extern int	g_exit_status;
 // # include <signal.h>

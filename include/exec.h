@@ -38,6 +38,11 @@ int		exec_pipeline(t_cmd *cmd, t_execctx *x);
 int		count_cmds(t_cmd *cmd);
 // int		spawn_cmds(t_cmd *cmd, char **envp);
 int 	spawn_cmds(t_cmd *cmd, char **envp, int last_status);
+int		spawn_all(t_cmd *cmd, t_spawn *s, t_execctx *x, int *count);
+int		cleanup_spawn_fail(pid_t *pids, int prev_fd);
+
+int		is_str(char *s, const char *ref);
+int		is_name(const char *n, const char *s);
 
 
 #endif

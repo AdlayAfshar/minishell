@@ -34,6 +34,7 @@ static int	hd_process_cmds(t_cmd *cmds, char **envp, int *last_status)
 	return (0);
 }
 
+//new new
 static int	hd_finish(int res)
 {
 	set_sig_interactive();
@@ -44,15 +45,53 @@ static int	hd_finish(int res)
 	return (0);
 }
 
-/* ⬇️ امضا تغییر کرد: last_status pointer شد */
+//new
+// static int	hd_finish(int res)
+// {
+// 	set_sig_interactive();
+// 	if (g_sig == SIGINT)
+// 		return (2);
+// 	if (res != 0)
+// 		return (1);
+// 	return (0);
+// }
+
 int	setup_heredocs(t_cmd *cmds, char **envp, int *last_status)
 {
 	int	res;
 
+	// g_sig = 0;   
 	set_sig_heredoc_parent();
 	res = hd_process_cmds(cmds, envp, last_status);
 	return (hd_finish(res));
 }
+
+//old
+// static int	hd_finish(int res)
+// {
+// 	set_sig_interactive();
+// 	if (res == 2)
+// 		return (2);
+// 	if (res != 0)
+// 		return (1);
+// 	return (0);
+// }
+
+// /* ⬇️ امضا تغییر کرد: last_status pointer شد */
+// int	setup_heredocs(t_cmd *cmds, char **envp, int *last_status)
+// {
+// 	int	res;
+
+// 	set_sig_heredoc_parent();
+// 	res = hd_process_cmds(cmds, envp, last_status);
+// 	// return (hd_finish(res));
+// 	set_sig_interactive();
+// 	if (g_sig == SIGINT)
+// 		return (2);
+// 	if (res != 0)
+// 		return (1);
+// 	return (0);
+// }
 
 //////////////
 

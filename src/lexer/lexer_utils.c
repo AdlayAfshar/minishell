@@ -19,8 +19,3 @@ int	is_op_char(char c)
 {
 	return (c == '|' || c == '<' || c == '>');
 }
-
-// int	is_op_char(char c)
-// {
-// 	return (c == '|' || c == '<' || c == '>' || c == ';');
-// }

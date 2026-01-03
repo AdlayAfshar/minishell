@@ -39,7 +39,6 @@ static int	handle_exit_args(char **argv, int last_status, int *should_exit)
 	if (!argv[1])
 	{
 		*should_exit = 1;
-		// return (g_exit_status);
 		return (last_status);
 	}
 	if (!is_numeric(argv[1]))
@@ -58,20 +57,6 @@ static int	handle_exit_args(char **argv, int last_status, int *should_exit)
 	return (ft_atoi(argv[1]));
 }
 
-// int	builtin_exit(char **argv)
-// int	builtin_exit(char **argv, int last_status)
-// {
-// 	int	status;
-// 	int	should_exit;
-
-// 	status = handle_exit_args(argv, &should_exit);
-// 	// if (should_exit)
-// 	// 	exit(status);
-// 	// return (status);
-// 	if (should_exit)
-//     	return (1000 + (status & 255));
-// 	return (status);
-// }
 int	builtin_exit(char **argv, int last_status)
 {
 	int	status;

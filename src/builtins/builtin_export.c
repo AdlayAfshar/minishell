@@ -76,9 +76,8 @@ static int	handle_with_equal(char *arg, char ***envp)
 
 int	builtin_export(char **argv, char ***envp)
 {
-	int		i;
-	int		res;
-	char	*eq;
+	int	i;
+	int	res;
 
 	if (!argv || !envp)
 		return (1);
@@ -90,15 +89,68 @@ int	builtin_export(char **argv, char ***envp)
 	i = 1;
 	while (argv[i])
 	{
-		res = 0;
-		eq = ft_strchr(argv[i], '=');
-		if (!eq)
-			res = handle_no_equal(argv[i], envp);
-		else
+		if (ft_strchr(argv[i], '='))
 			res = handle_with_equal(argv[i], envp);
-		if (res != 0)
+		else
+			res = handle_no_equal(argv[i], envp);
+		if (res)
 			return (1);
 		i++;
 	}
 	return (0);
 }
+
+// int	builtin_export(char **argv, char ***envp)
+// {
+// 	int		i;
+// 	int		res;
+// 	char	*eq;
+
+// 	if (!argv || !envp)
+// 		return (1);
+// 	if (!argv[1])
+// 		return (print_export_list(*envp), 0);
+// 	i = 1;
+// 	while (argv[i])
+// 	{
+// 		res = 0;
+// 		eq = ft_strchr(argv[i], '=');
+// 		if (!eq)
+// 			res = handle_no_equal(argv[i], envp);
+// 		else
+// 			res = handle_with_equal(argv[i], envp);
+// 		if (res != 0)
+// 			return (1);
+// 		i++;
+// 	}
+// 	return (0);
+// }
+
+// int	builtin_export(char **argv, char ***envp)
+// {
+// 	int		i;
+// 	int		res;
+// 	char	*eq;
+
+// 	if (!argv || !envp)
+// 		return (1);
+// 	if (!argv[1])
+// 	{
+// 		print_export_list(*envp);
+// 		return (0);
+// 	}
+// 	i = 1;
+// 	while (argv[i])
+// 	{
+// 		res = 0;
+// 		eq = ft_strchr(argv[i], '=');
+// 		if (!eq)
+// 			res = handle_no_equal(argv[i], envp);
+// 		else
+// 			res = handle_with_equal(argv[i], envp);
+// 		if (res != 0)
+// 			return (1);
+// 		i++;
+// 	}
+// 	return (0);
+// }

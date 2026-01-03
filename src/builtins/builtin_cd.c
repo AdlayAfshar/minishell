@@ -58,7 +58,6 @@ int	builtin_cd(char **argv, char ***envp)
 	/* case: cd */
 	if (!argv[1])
 	{
-		// target = getenv("HOME");
 		target = get_env_val(*envp, "HOME");
 		if (!target)
 		{

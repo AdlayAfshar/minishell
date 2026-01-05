@@ -17,22 +17,19 @@ static int	hd_open_outfile(const char *fname, int *fd)
 //nnn
 static void	hd_child_run(t_hd *h)
 {
+	int	res;
+
 	set_sig_heredoc_child();
 	rl_catch_signals = 0;
 	rl_catch_sigwinch = 0;
 	g_sig = 0;
 
-	if (hd_read_loop(h) == 2)
-	{
-		close(h->fd);
-		exit(130);
-	}
-	if (hd_read_loop(h))
-	{
-		close(h->fd);
-		exit(1);
-	}
+	res = hd_read_loop(h);
 	close(h->fd);
+	if (res == 2)
+		exit(130);
+	if (res != 0)
+		exit(1);
 	exit(0);
 }
 
@@ -135,13 +132,15 @@ static int	hd_apply_status(int status, int *last_status)
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
 		if (last_status)
-			*last_status = 130;
+			*last_status = 1;
+			// *last_status = 130;
 		return (2);
 	}
 	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
 	{
 		if (last_status)
-			*last_status = 130;
+			*last_status = 1;
+			// *last_status = 130;
 		return (2);
 	}
 	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)

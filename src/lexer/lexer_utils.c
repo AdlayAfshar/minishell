@@ -15,7 +15,12 @@ void	skip_spaces(const char *s, size_t *i)
 }
 
 // return 1 if c can start an operator token, 0 otherwise
-int	is_op_char(char c)
+// int	is_op_char(char c)
+// {
+// 	return (c == '|' || c == '<' || c == '>');
+// }
+
+int is_op_char(char c)
 {
-	return (c == '|' || c == '<' || c == '>');
+    return (c == '|' || c == '<' || c == '>' || c == ';');
 }

@@ -1,15 +1,40 @@
 
 #include "minishell.h"
 
-void	ms_set_termios(void)
+// void	ms_set_termios(void)
+// {
+// 	struct termios	t;
+
+// 	if (tcgetattr(STDIN_FILENO, &t) == -1)
+// 		return ;
+// 	t.c_lflag &= ~ECHOCTL;
+// 	tcsetattr(STDIN_FILENO, TCSANOW, &t);
+// }
+void	ms_set_termios(int on)
 {
 	struct termios	t;
 
 	if (tcgetattr(STDIN_FILENO, &t) == -1)
 		return ;
-	t.c_lflag &= ~ECHOCTL;
+	if (on)
+		t.c_lflag |= ECHOCTL;
+	else
+		t.c_lflag &= ~ECHOCTL;
 	tcsetattr(STDIN_FILENO, TCSANOW, &t);
 }
+
+// static void	ms_set_echoctl(int on)
+// {
+// 	struct termios	t;
+
+// 	if (tcgetattr(STDIN_FILENO, &t) == -1)
+// 		return ;
+// 	if (on)
+// 		t.c_lflag |= ECHOCTL;
+// 	else
+// 		t.c_lflag &= ~ECHOCTL;
+// 	tcsetattr(STDIN_FILENO, TCSANOW, &t);
+// }
 
 // ECHOCTL فلگی است که باعث می‌شود کاراکترهای کنترلی به شکل قابل دیدن چاپ شوند.
 // 	~ECHOCTL یعنی «برعکسِ ECHOCTL» 

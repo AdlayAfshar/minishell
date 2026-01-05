@@ -352,7 +352,7 @@ int	main(int argc, char **argv, char **envp_in)
 	envp = dup_env(envp_in); // (کپی محیط)
 	if (!envp) // اگر نشد: خروج با 1
 		return (1);
-	ms_set_termios(); // (تنظیمات ترمینال)
+	ms_set_termios(0); // (تنظیمات ترمینال)
 	// init_interactive_signals(); // (SIGINT فعال، SIGQUIT نادیده)
 	rl_catch_signals = 0;
 	rl_catch_sigwinch = 0;

@@ -1,6 +1,8 @@
 #include "minishell.h"
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
 // extern int	rl_done;
 /*
 ** SIGINT handler در حالت پرامپت (interactive)
@@ -153,7 +155,9 @@ static void	sigint_heredoc_child(int sig)
 	(void)sig;
 	g_sig = SIGINT;
 	rl_done = 1;
-	write(1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	ioctl(0, TIOCSTI, "\n");
 }
 
 // last

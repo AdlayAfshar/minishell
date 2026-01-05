@@ -60,7 +60,7 @@ int	setup_heredocs(t_cmd *cmds, char **envp, int *last_status)
 {
 	int	res;
 
-	// g_sig = 0;   
+	g_sig = 0;
 	set_sig_heredoc_parent();
 	res = hd_process_cmds(cmds, envp, last_status);
 	return (hd_finish(res));

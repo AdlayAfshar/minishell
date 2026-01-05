@@ -1,4 +1,5 @@
-#include "minishell.h"
+
+#include "expand.h"
 
 int	grow_buf(t_exp *e, size_t need)
 {

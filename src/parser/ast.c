@@ -1,5 +1,5 @@
-#include "../../include/parser.h"
-#include <stdlib.h>
+
+#include "parser.h"
 
 static void	free_strv(char **v)
 {

@@ -1,5 +1,7 @@
 
-#include "minishell.h"
+#include "builtins.h"
+#include "libft.h"
+#include "env.h"
 
 static void	print_export_error(const char *name)
 {

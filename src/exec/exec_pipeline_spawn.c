@@ -1,5 +1,5 @@
 
-#include "minishell.h"
+#include "exec.h"
 
 static int	spawn_one(t_cmd *cur, t_spawn *s, t_execctx *x)
 {

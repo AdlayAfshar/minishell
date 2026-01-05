@@ -1,4 +1,6 @@
-#include "minishell.h"
+
+#include "builtins.h"
+#include "libft.h"
 
 static void	print_env(char **envp)
 {

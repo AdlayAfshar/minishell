@@ -1,6 +1,9 @@
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
+typedef struct s_cmd		t_cmd;
+typedef struct s_execctx	t_execctx;
+
 int     builtin_echo(char **argv);
 int     builtin_cd(char **argv, char ***envp);
 int     builtin_pwd(char **argv);

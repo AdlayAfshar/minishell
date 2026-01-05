@@ -1,4 +1,5 @@
-#include "minishell.h"
+
+#include "lexer.h"
 
 // ensure buffer has at least new_len + 1 capacity
 static int	ensure_buf_cap(t_wbuf *b, size_t new_len)

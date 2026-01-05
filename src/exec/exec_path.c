@@ -1,4 +1,5 @@
-#include "minishell.h"
+
+#include "exec.h"
 
 static char	*join_path(const char *dir, const char *cmd)
 {

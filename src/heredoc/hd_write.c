@@ -1,4 +1,6 @@
+
 #include "heredoc.h"
+#include "libft.h"
 
 int	hd_write_line(int fd, const char *s)
 {

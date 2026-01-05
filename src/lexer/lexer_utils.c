@@ -1,4 +1,5 @@
-#include "minishell.h"
+
+#include "lexer.h"
 
 // return 1 if c is a whitespace character, 0 otherwise
 int	is_space(char c)

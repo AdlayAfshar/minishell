@@ -1,4 +1,5 @@
-#include "minishell.h"
+
+#include "expand.h"
 
 static int	expand_argv(char ***pargv, char **envp, int last_status)
 {

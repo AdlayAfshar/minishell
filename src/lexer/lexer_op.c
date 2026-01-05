@@ -1,4 +1,5 @@
-#include "minishell.h"
+
+#include "lexer.h"
 
 // match operator at position i and set how many chars were consumed 
 static t_tok_type	match_op(const char *s, size_t i, size_t *consumed)

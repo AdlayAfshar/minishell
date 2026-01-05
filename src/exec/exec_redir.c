@@ -1,4 +1,6 @@
-#include "minishell.h"
+
+#include "exec.h"
+#include <stdio.h>
 
 static int	open_heredoc_file(t_redir *r)
 {

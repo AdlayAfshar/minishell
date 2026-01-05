@@ -1,4 +1,5 @@
-#include "minishell.h"
+
+#include "expand.h"
 
 int	is_var_start(char c)
 {

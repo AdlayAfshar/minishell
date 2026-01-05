@@ -1,4 +1,5 @@
-#include "minishell.h"
+
+#include "lexer.h"
 
 // allocate and initialize a new token with given value and type
 t_token	*token_new(char *value, t_tok_type type)

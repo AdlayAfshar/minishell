@@ -1,5 +1,8 @@
 
+#include "exec.h"
+#include "builtins.h"
 #include "minishell.h"
+
 
 static int	exec_child_builtin(t_cmd *cmd, t_execctx *x)
 {

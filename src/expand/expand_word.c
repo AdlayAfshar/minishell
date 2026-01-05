@@ -1,5 +1,5 @@
 
-#include "minishell.h"
+#include "expand.h"
 
 static void	init_exp(t_exp *e, char **envp, int last_status)
 {

@@ -1,7 +1,9 @@
 #ifndef LEXER_H
 # define LEXER_H
 
+# include "libft.h"
 # include <stddef.h>
+# include <stdlib.h>
 
 typedef enum e_tok_type
 {

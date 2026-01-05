@@ -2,6 +2,7 @@
 # define PARSER_H
 
 # include "lexer.h"
+# include <stdlib.h>
 
 typedef enum e_redir_type
 {

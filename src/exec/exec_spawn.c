@@ -1,5 +1,5 @@
 
-#include "minishell.h"
+#include "exec.h"
 
 static int	init_spawn(t_cmd *cmd, pid_t **pids, int *prev_fd)
 {

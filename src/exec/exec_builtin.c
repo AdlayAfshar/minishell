@@ -1,4 +1,6 @@
 
+#include "exec.h"
+#include "builtins.h"
 #include "minishell.h"
 
 int	is_builtin_name(char *name)

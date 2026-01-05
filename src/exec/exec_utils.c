@@ -1,4 +1,6 @@
-#include "minishell.h"
+
+#include "exec.h"
+#include <stdio.h>
 
 int	is_str(char *s, const char *ref)
 {
@@ -24,4 +26,27 @@ int	is_name(const char *n, const char *s)
 	if (n[i] != '\0' || s[i] != '\0')
 		return (0);
 	return (1);
+}
+
+int	pipe_or_init(t_cmd *cur, int pipe_fd[2], pid_t *pids)
+{
+	if (cur->next)
+	{
+		if (pipe(pipe_fd) < 0)
+			return (free(pids), perror("pipe"), 1);
+	}
+	else
+	{
+		pipe_fd[0] = -1;
+		pipe_fd[1] = -1;
+	}
+	return (0);
+}
+
+int	fork_or_fail(pid_t *pids, int i)
+{
+	pids[i] = fork();
+	if (pids[i] < 0)
+		return (free(pids), perror("fork"), 1);
+	return (0);
 }

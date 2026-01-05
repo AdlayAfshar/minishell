@@ -1,4 +1,5 @@
-#include "minishell.h"
+
+#include "lexer.h"
 
 // helper to clear token list and return NULL on error
 static t_token	*lex_lex_error(t_token **lst)

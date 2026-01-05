@@ -1,3 +1,7 @@
+
+#include "exec.h"
+#include "builtins.h"
+#include "signals.h"
 #include "minishell.h"
 
 int	count_cmds(t_cmd *cmd)

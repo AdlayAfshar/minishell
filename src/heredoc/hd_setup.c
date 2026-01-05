@@ -1,5 +1,6 @@
 
 #include "heredoc.h"
+#include "signals.h"
 
 static int	hd_process_redirs(t_redir *r, char **envp, int *last_status)
 {

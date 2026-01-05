@@ -1,4 +1,6 @@
+
 #include "heredoc.h"
+#include "libft.h"
 
 char	*hd_make_name(void)
 {

@@ -1,5 +1,6 @@
 
-#include "minishell.h"
+
+#include "parser.h"
 
 static int	parse_pipe(t_token **ts, t_cmd **cur, t_cmd **pipe)
 {

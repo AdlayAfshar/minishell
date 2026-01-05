@@ -1,4 +1,6 @@
-#include "minishell.h"
+
+#include "builtins.h"
+#include "exec.h"
 
 static int	is_numeric(const char *s)
 {

@@ -1,5 +1,9 @@
 
-#include "minishell.h"
+#include "builtins.h"
+#include "libft.h"
+#include "env.h"
+#include "exec.h"
+#include <unistd.h>
 
 static void	print_cd_error(const char *msg, const char *arg)
 {

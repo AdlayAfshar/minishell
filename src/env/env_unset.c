@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "env.h"
 
 int	env_count(char **envp)
 {

@@ -1,4 +1,8 @@
-#include "minishell.h"
+
+#include "builtins.h"
+#include "libft.h"
+# include <errno.h>
+# include <stdio.h>
 
 int	builtin_pwd(char **argv)
 {

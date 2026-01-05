@@ -1,4 +1,5 @@
-#include "minishell.h"
+
+#include "parser.h"
 
 void	redir_push(t_redir **lst, t_redir *node)
 {

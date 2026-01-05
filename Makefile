@@ -1,7 +1,10 @@
 NAME = minishell
 
-SRCS	= src/main.c \
-		  src/signals.c \
+SRCS	= src/shell/main.c \
+     	  src/shell/line_exec.c \
+		  src/shell/line_utils.c \
+		  src/signals/signal_modes.c \
+		  src/signals/signals_heredoc.c \
 		  src/lexer/lexer_lex.c \
 		  src/lexer/lexer_op.c \
 		  src/lexer/lexer_tokens.c \
@@ -40,16 +43,11 @@ SRCS	= src/main.c \
 		  src/heredoc/hd_loop.c \
 		  src/heredoc/hd_process.c \
 		  src/heredoc/hd_setup.c \
-		  src/termios.c
+		  src/heredoc/heredoc_utils.c \
+		  src/terminal/termios.c
 
-		  
-# 		  src/heredoc/heredoc.c \
-		  src/termios.c
-
-# 		  src/builtins/builtins.c
 
 OBJS = $(SRCS:.c=.o)
-# INCS = -I include -I libft
 INCS = -I include -I libft -I/opt/homebrew/opt/readline/include
 
 COMP = cc
@@ -64,7 +62,6 @@ all: ${NAME}
 
 ${NAME}: ${OBJS} ${LIBFT}
 	${COMP} ${CFLAGS} ${OBJS} ${LIBFT} -L/opt/homebrew/opt/readline/lib -lreadline -o ${NAME}
-# 	@${COMP} ${CFLAGS} ${OBJS} ${LIBFT} -lreadline -o ${NAME}
 
 ${LIBFT}:
 	@${MAKE} -C ./libft --no-print-directory

@@ -1,4 +1,6 @@
-#include "minishell.h"
+
+#include "builtins.h"
+#include "libft.h"
 
 int	is_valid_key(const char *key)
 {

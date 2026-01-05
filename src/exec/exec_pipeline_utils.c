@@ -1,72 +1,64 @@
-#include "minishell.h"
 
-#include <errno.h>
-#include <sys/wait.h>
+#include "exec.h"
+#include <stdio.h>
+
+static int	handle_child_status(int status, int *printed)
+{
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT)
+		{
+			if (!*printed)
+			{
+				write(1, "\n", 1);
+				*printed = 1;
+			}
+			return (130);
+		}
+		return (128 + WTERMSIG(status));
+	}
+	return (0);
+}
+
+static int	wait_one(pid_t pid, int *status)
+{
+	int	ret;
+
+	ret = waitpid(pid, status, 0);
+	if (ret == -1 && errno == EINTR)
+		return (0);
+	if (ret == -1)
+	{
+		perror("waitpid");
+		return (-1);
+	}
+	return (1);
+}
 
 int	wait_for_children(pid_t *pids, int count)
 {
 	int	i;
 	int	status;
 	int	last;
+	int	printed;
 	int	ret;
-	int printed;
 
-	printed = 0;
 	i = 0;
 	last = 0;
+	printed = 0;
 	while (i < count)
 	{
-		ret = waitpid(pids[i], &status, 0);
+		ret = wait_one(pids[i], &status);
 		if (ret == -1)
-		{
-			if (errno == EINTR)
-				continue ;
-			perror("waitpid");
 			break ;
-		}
-		if (WIFEXITED(status))
-			last = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-		{
-			if (WTERMSIG(status) == SIGINT)
-			{
-				last = 130;
-				if (!printed)
-				{
-					write(1, "\n", 1);
-					printed = 1;
-				}
-			}
-			else
-				last = 128 + WTERMSIG(status);
-		}
+		if (ret == 1)
+			last = handle_child_status(status, &printed);
 		i++;
 	}
 	free(pids);
 	return (last);
-}
-
-int	pipe_or_init(t_cmd *cur, int pipe_fd[2], pid_t *pids)
-{
-	if (cur->next)
-	{
-		if (pipe(pipe_fd) < 0)
-			return (free(pids), perror("pipe"), 1);
-	}
-	else
-	{
-		pipe_fd[0] = -1;
-		pipe_fd[1] = -1;
-	}
-	return (0);
-}
-
-int	fork_or_fail(pid_t *pids, int i)
-{
-	pids[i] = fork();
-	if (pids[i] < 0)
-		return (free(pids), perror("fork"), 1);
-	return (0);
 }
 
 void	child_side(t_cmd *cur, int prev_fd, int pipe_fd[2], t_execctx *x)

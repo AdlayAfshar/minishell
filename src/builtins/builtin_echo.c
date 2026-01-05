@@ -1,4 +1,6 @@
-#include "minishell.h"
+
+#include "builtins.h"
+#include "libft.h"
 
 static int	is_flag_n(char *s)
 {

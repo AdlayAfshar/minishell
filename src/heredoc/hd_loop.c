@@ -1,4 +1,9 @@
+
 #include "heredoc.h"
+#include "signals.h"
+#include "expand.h"
+#include "libft.h"
+#include <readline/readline.h>
 
 static int	hd_is_delim(const char *line, const char *delim)
 {

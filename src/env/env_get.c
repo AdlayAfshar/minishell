@@ -1,4 +1,5 @@
-#include "minishell.h"
+#include "env.h"
+#include "expand.h"
 
 char	*get_env_val(char **envp, const char *key)
 {

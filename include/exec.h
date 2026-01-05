@@ -1,7 +1,8 @@
 #ifndef EXEC_H
 # define EXEC_H
 
-
+# include "parser.h"
+# include <sys/types.h>
 # include <fcntl.h>
 # include <errno.h>
 
@@ -19,8 +20,11 @@ typedef struct s_execctx
 	int		*last_status;
 }	t_execctx;
 
+#define EXIT_REQ_BASE 1000
+
 void	exec_cmd_child(t_cmd *cmd, int in_fd, int out_fd, t_execctx *x);
 int     apply_redirs(t_redir *r);
+
 char	*find_in_path(char *cmd, char **envp);
 char	*get_env_val(char **envp, const char *key);
 

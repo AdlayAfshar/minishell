@@ -1,5 +1,5 @@
 
-#include "minishell.h"
+#include "terminal.h"
 
 void	ms_set_termios(int on)
 {

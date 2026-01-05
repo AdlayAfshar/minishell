@@ -74,7 +74,6 @@ int	exec_builtin(t_cmd *cmd, t_execctx *x)
 	int	status;
 	int	code;
 
-	// write(2, "EXEC_BUILTIN1\n", 13);
 	if (dup_stdio(saved) < 0)
 		return (1);
 	if (apply_redirs(cmd->redirs) < 0)
@@ -90,40 +89,5 @@ int	exec_builtin(t_cmd *cmd, t_execctx *x)
 		exit(code);
 	}
 	restore_stdio(saved);
-	// write(2, "EXEC_BUILTIN2\n", 13);
 	return (status);
 }
-
-// exec_builtin.c (نسخه تمیزتر و Norm-friendly)
-// int	exec_builtin(t_cmd *cmd, t_execctx *x)
-// {
-// 	int	saved[2];
-// 	int	status;
-// 	int	code;
-
-// 	if (dup_stdio(saved) < 0)
-// 		return (1);
-// 	if (apply_redirs(cmd->redirs) < 0)
-// 	{
-// 		dup2(saved[0], STDIN_FILENO);
-// 		dup2(saved[1], STDOUT_FILENO);
-// 		close(saved[0]);
-// 		close(saved[1]);
-// 		return (1);
-// 	}
-// 	status = run_builtin_cmd(cmd, x);
-// 	if (status >= EXIT_REQ_BASE)
-// 	{
-// 		code = status - EXIT_REQ_BASE;
-// 		dup2(saved[0], STDIN_FILENO);
-// 		dup2(saved[1], STDOUT_FILENO);
-// 		close(saved[0]);
-// 		close(saved[1]);
-// 		exit(code);
-// 	}
-// 	dup2(saved[0], STDIN_FILENO);
-// 	dup2(saved[1], STDOUT_FILENO);
-// 	close(saved[0]);
-// 	close(saved[1]);
-// 	return (status);
-// }

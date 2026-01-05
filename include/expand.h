@@ -13,15 +13,12 @@ typedef struct s_exp
 }	t_exp;
 
 
-/* از اینا در expand_word.c استفاده می‌کنیم */
 int		is_var_start(char c);
 int		is_var_char(char c);
 char	*exp_get_env_val(const char *name, char **envp);
 
-/* expand یک کلمه (argv[i] یا target ریدایرکشن) */
 char	*expand_word(const char *s, char **envp, int last_status);
 
-/* expand روی کل لیست فرمان‌ها (argv + redirs) */
 int		expand_all(t_cmd *cmds, char **envp, int last_status);
 
 int		grow_buf(t_exp *e, size_t need);

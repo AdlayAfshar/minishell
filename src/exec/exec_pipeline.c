@@ -29,7 +29,6 @@ int	exec_pipeline(t_cmd *cmd, t_execctx *x)
 
 	if (!cmd)
 		return (0);
-	// write(2, "EXEC_PIPELINE1\n", 14);
 	cmd_count = count_cmds(cmd);
 	if (cmd_count == 1)
 	{
@@ -40,14 +39,11 @@ int	exec_pipeline(t_cmd *cmd, t_execctx *x)
 			return (status);
 		}
 	}
-	// new
 	ms_set_termios(1);
 	set_sig_parent_exec();
 	status = spawn_cmds(cmd, *(x->envp), *(x->last_status));
-	// new
 	set_sig_interactive();
 	ms_set_termios(0);
 	*(x->last_status) = status;
-	// write(2, "EXEC_PIPELINE2\n", 14);
 	return (status);
 }

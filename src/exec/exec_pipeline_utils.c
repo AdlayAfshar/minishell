@@ -3,7 +3,6 @@
 #include <errno.h>
 #include <sys/wait.h>
 
-//new
 int	wait_for_children(pid_t *pids, int count)
 {
 	int	i;
@@ -27,8 +26,6 @@ int	wait_for_children(pid_t *pids, int count)
 		}
 		if (WIFEXITED(status))
 			last = WEXITSTATUS(status);
-		// else if (WIFSIGNALED(status))
-		// 	last = 128 + WTERMSIG(status);
 		else if (WIFSIGNALED(status))
 		{
 			if (WTERMSIG(status) == SIGINT)
@@ -48,30 +45,6 @@ int	wait_for_children(pid_t *pids, int count)
 	free(pids);
 	return (last);
 }
-
-//old
-// int	wait_for_children(pid_t *pids, int count)
-// {
-// 	int	i;
-// 	int	status;
-// 	int	last;
-
-// 	i = 0;
-// 	last = 0;
-// 	while (i < count)
-// 	{
-// 		if (waitpid(pids[i], &status, 0) > 0)
-// 		{
-// 			if (WIFEXITED(status))
-// 				last = WEXITSTATUS(status);
-// 			else if (WIFSIGNALED(status))
-// 				last = 128 + WTERMSIG(status);
-// 		}
-// 		i++;
-// 	}
-// 	free(pids);
-// 	return (last);
-// }
 
 int	pipe_or_init(t_cmd *cur, int pipe_fd[2], pid_t *pids)
 {

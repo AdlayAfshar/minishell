@@ -82,20 +82,12 @@ char	*read_word(const char *s, size_t *i)
 	while (s[*i] && !is_space(s[*i]) && !is_op_char(s[*i]))
 	{
 		r = process_word_char(s, i, &b);
-	// 	process_word_char وقتی -1 می‌دهد یعنی یکی از این‌ها رخ داده:
-	// •	malloc/گسترش buffer fail شده
-	// •	یا کوتیشن باز شده ولی کوتیشن بسته پیدا نشده (EOF رسیده)
 		if (r < 0)
 		{
 			free(b.data);
 			return (NULL);
 		}
 	}
-	// ولی این check یک “ایمنی” است: اگر به هر دلیل loop حتی یک بار هم اجرا نشد، یک رشته‌ی خالی برگردان.
-
-// 	نکته مهم:
-// این طراحی باعث می‌شه که read_word هیچ‌وقت NULL برنگرداند مگر خطا (malloc/quote).
-// یعنی “خالی بودن” را با "" نشان می‌دهد، نه با NULL.
 	if (!b.data)
 		return (ft_strdup(""));
 	b.data[b.len] = '\0';

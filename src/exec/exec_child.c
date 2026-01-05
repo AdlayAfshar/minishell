@@ -92,13 +92,5 @@ void	exec_cmd_child(t_cmd *cmd, int in_fd, int out_fd, t_execctx *x)
 			status -= EXIT_REQ_BASE;
 		exit(status & 255);
 	}
-		// hh
-// 	int i = 0;
-// while (cmd->argv && cmd->argv[i])
-// {
-//     fprintf(stderr, "argv[%d]=[%s]\n", i, cmd->argv[i]);
-//     i++;
-// }
-// end
 	exec_external(cmd, *(x->envp));
 }

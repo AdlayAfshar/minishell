@@ -3,18 +3,6 @@
 
 # include <stddef.h>
 
-// tokens 
-
-// typedef enum e_tok_type
-// {
-// 	TOK_WORD,
-// 	TOK_PIPE,
-// 	TOK_REDIR_IN,
-// 	TOK_REDIR_OUT,
-// 	TOK_HEREDOC,
-// 	TOK_APPEND
-// }	t_tok_type;
-
 typedef enum e_tok_type
 {
 	TOK_WORD,
@@ -33,7 +21,6 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-// buffer used while reading a word
 typedef struct s_wbuf
 {
 	char	*data;

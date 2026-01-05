@@ -22,12 +22,9 @@
 # include <termios.h>
 # include <errno.h>
 
-// extern int	g_exit_status;
-// # include <signal.h>
 extern volatile sig_atomic_t	g_sig;
 #define EXIT_REQ_BASE 1000
 
-// void	ms_set_termios(void);
 void	ms_set_termios(int on);
 
 #endif

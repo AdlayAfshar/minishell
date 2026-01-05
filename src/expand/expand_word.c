@@ -10,20 +10,6 @@ static void	init_exp(t_exp *e, char **envp, int last_status)
 	e->last_status = last_status;
 }
 
-// static int	expand_dollar(const char *s, size_t *i, t_exp *e)
-// {
-// 	(*i)++;
-// 	if (!s[*i])
-// 		return (append_char(e, '$'));
-// 	if (s[*i] == '?')
-// 		return (expand_status(i, e));
-// 	if (!is_var_start(s[*i]))
-// 		return (append_char(e, '$'));
-// 	if (expand_env_var(s, i, e))
-// 		return (1);
-// 	return (0);
-// }
-
 static int	expand_dollar(const char *s, size_t *i, t_exp *e)
 {
 	(*i)++;
@@ -42,16 +28,6 @@ static int	expand_dollar(const char *s, size_t *i, t_exp *e)
 		return (1);
 	return (0);
 }
-
-// هدف دقیق تابع (در یک جمله)
-
-// اگر به یک کوتیشن رسیدیم که فعال است (یعنی توسط کوتیشن دیگر قفل نشده)،
-// وضعیت داخل‌بودن در آن کوتیشن را روشن/خاموش کن
-// و خود کوتیشن را مصرف کن (حذفش کن).
-
-
-// handle_quotes فقط بررسی می‌کند آیا کاراکتر فعلی یک کوتیشن معتبر است یا نه؛
-// اگر بود، وضعیت «داخل کوتیشن بودن» را روشن/خاموش می‌کند، خود کوتیشن را حذف می‌کند، و اجازه نمی‌دهد وارد خروجی شود.
 
 static int	handle_quotes(const char *s, size_t *i, int *in_s, int *in_d)
 {

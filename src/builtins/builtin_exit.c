@@ -33,7 +33,6 @@ static void	exit_error(const char *msg, const char *arg)
 	write(2, "\n", 1);
 }
 
-// static int	handle_exit_args(char **argv, int *should_exit)
 static int	handle_exit_args(char **argv, int last_status, int *should_exit)
 {
 	if (!argv[1])

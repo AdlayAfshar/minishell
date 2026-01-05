@@ -20,7 +20,6 @@ static t_tok_type	match_op(const char *s, size_t i, size_t *consumed)
 		return (TOK_REDIR_IN);
 	if (s[i] == '>')
 		return (TOK_REDIR_OUT);
-	// new hh
 	if (s[i] == ';')
     	return (TOK_SEMI);
 	*consumed = 0;

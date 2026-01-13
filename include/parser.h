@@ -4,12 +4,18 @@
 # include "lexer.h"
 # include <stdlib.h>
 
+/*
+ * <  
+ * >  
+ * >> 
+ * << 
+*/
 typedef enum e_redir_type
 {
-	R_IN = 0,     /* <  */
-	R_OUT,        /* >  */
-	R_APPEND,     /* >> */
-	R_HEREDOC     /* << */
+	R_IN = 0,
+	R_OUT,
+	R_APPEND,
+	R_HEREDOC
 }	t_redir_type;
 
 typedef struct s_redir

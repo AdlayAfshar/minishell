@@ -74,7 +74,6 @@ int	exec_builtin(t_cmd *cmd, t_execctx *x)
 {
 	int	saved[2];
 	int	status;
-	int	code;
 
 	if (dup_stdio(saved) < 0)
 		return (1);
@@ -84,12 +83,6 @@ int	exec_builtin(t_cmd *cmd, t_execctx *x)
 		return (1);
 	}
 	status = run_builtin_cmd(cmd, x);
-	if (status >= EXIT_REQ_BASE)
-	{
-		code = status - EXIT_REQ_BASE;
-		restore_stdio(saved);
-		exit(code);
-	}
 	restore_stdio(saved);
 	return (status);
 }

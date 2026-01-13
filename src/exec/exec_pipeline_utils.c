@@ -1,6 +1,8 @@
 
 #include "exec.h"
+#include <signal.h>
 #include <stdio.h>
+#include <sys/wait.h>
 
 static int	handle_child_status(int status, int *printed)
 {

@@ -1,5 +1,6 @@
 
 #include "minishell.h"
+#include "shell.h"
 #include <readline/history.h>
 
 void	trim_cr(char *s)
@@ -20,21 +21,24 @@ static size_t	next_break_pos(char *line, size_t i)
 	return (i);
 }
 
-static void	process_one_subline(char *line, size_t start, size_t end,
-		char ***envp, int *exit_status)
+static int	process_one_subline(char *line, size_t start, size_t end,
+		t_line_ctx *ctx)
 {
 	char	*one;
+	int		st;
 
 	one = ft_substr(line, start, end - start);
 	if (!one)
-		return ;
+		return (0);
+	st = 0;
 	if (one[0] != '\0')
 	{
 		trim_cr(one);
 		add_history(one);
-		process_line(one, envp, exit_status);
+		st = process_line(one, ctx->envp, ctx->exit_status);
 	}
 	free(one);
+	return (st);
 }
 
 static void	replace_cr_with_nl(char *line)
@@ -50,20 +54,27 @@ static void	replace_cr_with_nl(char *line)
 	}
 }
 
-void	process_pasted_lines(char *line, char ***envp, int *exit_status)
+int	process_pasted_lines(char *line, char ***envp, int *exit_status)
 {
-	size_t	i;
-	size_t	start;
+	size_t		i;
+	size_t		start;
+	int			st;
+	t_line_ctx	ctx;
 
+	ctx.envp = envp;
+	ctx.exit_status = exit_status;
 	i = 0;
 	start = 0;
 	replace_cr_with_nl(line);
 	while (1)
 	{
 		i = next_break_pos(line, start);
-		process_one_subline(line, start, i, envp, exit_status);
+		st = process_one_subline(line, start, i, &ctx);
+		if (st >= EXIT_REQ_BASE)
+			return (st);
 		if (line[i] == '\0')
 			break ;
 		start = i + 1;
 	}
+	return (0);
 }

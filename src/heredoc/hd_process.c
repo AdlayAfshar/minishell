@@ -3,9 +3,7 @@
 #include "signals.h"
 #include "libft.h"
 #include <errno.h>
-
-extern int	rl_catch_signals;
-extern int	rl_catch_sigwinch;
+#include <sys/wait.h>
 
 static void	hd_child_run(t_hd *h)
 {

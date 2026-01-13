@@ -50,14 +50,22 @@ static void	exec_cmds(t_cmd *cmds, char ***envp, int *exit_status)
 int	process_line(char *line, char ***envp, int *exit_status)
 {
 	t_cmd	*cmds;
+	int		st;
 
 	cmds = lex_parse_line(line);
 	if (!cmds)
 		return (0);
 	if (expand_cmds(cmds, *envp, *exit_status))
-		return (0);
+	{
+		free_cmds(cmds);
+		return (1);
+	}
 	if (run_heredocs(cmds, *envp, exit_status))
-		return (0);
+	{
+		free_cmds(cmds);
+		return (1);
+	}
 	exec_cmds(cmds, envp, exit_status);
-	return (0);
+	st = *exit_status;
+	return (st);
 }

@@ -1,8 +1,8 @@
 
-#include "exec.h"
 #include "builtins.h"
-#include "signals.h"
+#include "exec.h"
 #include "minishell.h"
+#include "signals.h"
 
 int	count_cmds(t_cmd *cmd)
 {
@@ -28,8 +28,8 @@ static int	run_single_builtin(t_cmd *cmd, t_execctx *x)
 
 int	exec_pipeline(t_cmd *cmd, t_execctx *x)
 {
-	int	cmd_count;
-	int	status;
+	int cmd_count;
+	int status;
 
 	if (!cmd)
 		return (0);
@@ -44,8 +44,7 @@ int	exec_pipeline(t_cmd *cmd, t_execctx *x)
 		}
 	}
 	ms_set_termios(1);
-	// set_sig_parent_exec();
-	set_sig_parent_ignore();
+	set_sig_ignore();
 	status = spawn_cmds(cmd, *(x->envp), *(x->last_status));
 	set_sig_interactive();
 	ms_set_termios(0);

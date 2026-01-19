@@ -14,10 +14,8 @@ extern int						rl_catch_sigwinch;
 void							set_signal_handler(int sig,
 									void (*handler)(int));
 void							set_sig_interactive(void);
-// void							set_sig_heredoc_parent(void);
 void							set_sig_child_default(void);
-void							set_sig_parent_ignore(void);
-// void							set_sig_parent_exec(void);
+void							set_sig_ignore(void);
 void							set_sig_heredoc_child(void);
 
 #endif

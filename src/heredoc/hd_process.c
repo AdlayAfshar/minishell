@@ -22,25 +22,28 @@ static void	hd_child_run(t_hd *h)
 		exit(1);
 	exit(0);
 }
-
+// for porablem: 2 + file => line_exec.c  => func:run_heredocs + process_line
 static int	hd_apply_status(int status, int *last_status)
 {
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
 		if (last_status)
-			*last_status = 1;
+			*last_status = 130;
+			// *last_status = 1;
 		return (2);
 	}
 	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
 	{
 		if (last_status)
-			*last_status = 1;
+			*last_status = 130;
+			// *last_status = 1;
 		return (2);
 	}
 	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
 		return (1);
 	return (0);
 }
+// for porablem: 2
 
 static int	hd_fork_and_wait(t_hd *h, int *last_status)
 {
@@ -80,7 +83,7 @@ int	process_heredoc(t_redir *r, char **envp, int *last_status)
 	if (hd_init(&h, r, envp, last_status))
 		return (1);
 	if (hd_make_and_open(&h, &fname))
-		return (hd_cleanup_parent(&h), 1);
+		return (hd_cleanup_parent(&h), 1); //why? or how?
 	res = hd_fork_and_wait(&h, last_status);
 	free(h.delim);
 	h.delim = NULL;

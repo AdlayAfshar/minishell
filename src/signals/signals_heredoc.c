@@ -4,16 +4,16 @@
 
 extern int	rl_done;
 
-void	set_sig_heredoc_parent(void)
-{
-	struct sigaction	sa;
+// void	set_sig_heredoc_parent(void)
+// {
+// 	struct sigaction	sa;
 
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
-	sa.sa_handler = SIG_IGN;
-	sigaction(SIGINT, &sa, NULL);
-	signal(SIGQUIT, SIG_IGN);
-}
+// 	sigemptyset(&sa.sa_mask);
+// 	sa.sa_flags = 0;
+// 	sa.sa_handler = SIG_IGN;
+// 	sigaction(SIGINT, &sa, NULL);
+// 	signal(SIGQUIT, SIG_IGN);
+// }
 
 static void	sigint_heredoc_child(int sig)
 {

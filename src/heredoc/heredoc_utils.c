@@ -6,7 +6,7 @@
 
 static int	hd_open_outfile(const char *fname, int *fd)
 {
-	*fd = open(fname, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+	*fd = open(fname, O_WRONLY | O_CREAT | O_TRUNC, 0600); // why?
 	if (*fd < 0)
 	{
 		perror(fname);
@@ -22,7 +22,10 @@ int	hd_init(t_hd *h, t_redir *r, char **envp, int *last_status)
 		return (1);
 	h->quoted = r->heredoc_quoted;
 	h->envp = envp;
-	h->last_status = (last_status ? *last_status : 0);
+	if (last_status)
+		h->last_status = *last_status;
+	else
+		h->last_status = 0;
 	return (0);
 }
 

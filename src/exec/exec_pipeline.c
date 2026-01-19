@@ -44,7 +44,8 @@ int	exec_pipeline(t_cmd *cmd, t_execctx *x)
 		}
 	}
 	ms_set_termios(1);
-	set_sig_parent_exec();
+	// set_sig_parent_exec();
+	set_sig_parent_ignore();
 	status = spawn_cmds(cmd, *(x->envp), *(x->last_status));
 	set_sig_interactive();
 	ms_set_termios(0);

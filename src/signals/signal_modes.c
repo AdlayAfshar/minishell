@@ -31,7 +31,7 @@ void	set_sig_child_default(void)
 	signal(SIGQUIT, SIG_DFL);
 }
 
-void	set_sig_parent_exec(void)
+void	set_sig_parent_ignore(void)
 {
 	struct sigaction	sa;
 
@@ -41,3 +41,14 @@ void	set_sig_parent_exec(void)
 	sigaction(SIGINT, &sa, NULL);
 	signal(SIGQUIT, SIG_IGN);
 }
+
+// void	set_sig_parent_exec(void)
+// {
+// 	struct sigaction	sa;
+
+// 	sigemptyset(&sa.sa_mask);
+// 	sa.sa_flags = 0;
+// 	sa.sa_handler = SIG_IGN; 
+// 	sigaction(SIGINT, &sa, NULL);
+// 	signal(SIGQUIT, SIG_IGN);
+// }

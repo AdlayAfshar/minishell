@@ -6,7 +6,7 @@ static int	parse_pipe(t_token **ts, t_cmd **cur, t_cmd **pipe)
 {
 	if (cur == NULL || *cur == NULL)
 		return (syntax_err("|", pipe));
-	if ((*cur)->argv == NULL && (*cur)->redirs == NULL)
+	if ((*cur)->argv == NULL && (*cur)->redirs == NULL) // => defensive programming => check for this example: < infile | wc 
 		return (syntax_err("|", pipe));
 	if (ts == NULL || *ts == NULL || (*ts)->next == NULL)
 		return (syntax_err("|", pipe));
@@ -36,7 +36,7 @@ static int	parse_redir(t_token **ts, t_cmd *cur, t_cmd **pipe)
 	if ((*ts)->next == NULL || (*ts)->next->type != TOK_WORD)
 		return (syntax_err("<redir>", pipe));
 	quoted = 0;
-	if (rt == R_HEREDOC && has_quote((*ts)->next->val))
+	if (rt == R_HEREDOC && has_quote((*ts)->next->val)) // important
 		quoted = 1;
 	r = redir_new(rt, (*ts)->next->val, quoted);
 	if (r == NULL)
@@ -46,7 +46,7 @@ static int	parse_redir(t_token **ts, t_cmd *cur, t_cmd **pipe)
 	}
 	redir_push(&cur->redirs, r);
 	*ts = (*ts)->next->next;
-	return (2);
+	return (2); // important: دو توکن جلو می‌رود: redir (<<) و هم WORD بعدش (delimiter/filename) مصرف می‌شوند.
 }
 
 static int	parse_word(t_token **ts, t_cmd *cur, t_cmd **pipe)
@@ -101,8 +101,8 @@ t_cmd	*parse_tokens(t_token *ts)
 		if (parse_handle_token(&ts, &cur, &pipe) != 0)
 			return (NULL);
 	}
-	if (pipe == NULL)
-		return (NULL);
+	// if (pipe == NULL) // pipe is guaranteed to be non-NULL here
+	// 	return (NULL);
 	if (pipe->argv == NULL && pipe->redirs == NULL)
 	{
 		syntax_err(NULL, &pipe);

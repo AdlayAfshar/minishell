@@ -16,8 +16,7 @@ void	set_signal_handler(int sig, __sighandler_t handler)
 
 static void	sigint_handler(int sig)
 {
-	(void)sig;
-	g_sig = SIGINT;
+	g_sig = sig;
 	write(1, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
@@ -48,7 +47,7 @@ void	set_sig_parent_ignore(void)
 
 // 	sigemptyset(&sa.sa_mask);
 // 	sa.sa_flags = 0;
-// 	sa.sa_handler = SIG_IGN; 
+// 	sa.sa_handler = SIG_IGN;
 // 	sigaction(SIGINT, &sa, NULL);
 // 	signal(SIGQUIT, SIG_IGN);
 // }

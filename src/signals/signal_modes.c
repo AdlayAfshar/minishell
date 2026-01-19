@@ -4,7 +4,7 @@
 
 volatile sig_atomic_t	g_sig = 0;
 
-void	set_signal_handler(int sig, __sighandler_t handler)
+void	set_signal_handler(int sig, void (*handler)(int)     )
 {
 	struct sigaction	sa;
 

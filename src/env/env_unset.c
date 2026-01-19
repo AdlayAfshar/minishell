@@ -1,4 +1,5 @@
 #include "env.h"
+#include <unistd.h>
 
 int	env_count(char **envp)
 {
@@ -14,8 +15,8 @@ int	env_count(char **envp)
 
 int	find_env_index(char **envp, const char *key)
 {
-	int		i;
-	int		klen;
+	int	i;
+	int	klen;
 
 	if (!envp || !key)
 		return (-1);
@@ -23,8 +24,7 @@ int	find_env_index(char **envp, const char *key)
 	i = 0;
 	while (envp[i])
 	{
-		if (!ft_strncmp(envp[i], key, klen)
-			&& envp[i][klen] == '=')
+		if (!ft_strncmp(envp[i], key, klen) && envp[i][klen] == '=')
 			return (i);
 		i++;
 	}
@@ -58,20 +58,33 @@ static int	remove_index(char ***envp, int idx)
 
 static int	unset_key(char ***envp, const char *key)
 {
-	int	idx;
+	int		idx;
+	char	*cwd;
+	int		res;
 
 	if (!envp || !*envp || !key)
 		return (0);
 	idx = find_env_index(*envp, key);
 	if (idx < 0)
 		return (0);
-	return (remove_index(envp, idx));
+	if (remove_index(envp, idx) != 0)
+		return (1);
+	if (ft_strlen(key) == 4 && ft_strncmp(key, "PATH", 4) == 0)
+	{
+		cwd = getcwd(NULL, 0);
+		if (!cwd)
+			cwd = ft_strdup(".");
+		res = set_env_var(envp, "PATH", cwd);
+		free(cwd);
+		return (res);
+	}
+	return (0);
 }
 
 int	builtin_unset(char **argv, char ***envp)
 {
-	int	i;
-	int	ret;
+	int i;
+	int ret;
 
 	if (!argv || !envp)
 		return (1);

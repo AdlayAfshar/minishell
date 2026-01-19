@@ -20,9 +20,6 @@ static void	sigint_heredoc_child(int sig)
 	g_sig = sig;
 	rl_done = 1;
 	ioctl(0, TIOCSTI, "\n");
-	write(0, "arman\n", 6);
-	// rl_replace_line("", 0);
-	// rl_on_new_line();
 }
 
 void	set_sig_heredoc_parent(void)

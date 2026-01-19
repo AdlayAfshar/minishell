@@ -1,7 +1,7 @@
 
 #include "heredoc.h"
-#include "signals.h"
 #include "libft.h"
+#include "signals.h"
 #include <errno.h>
 #include <sys/wait.h>
 
@@ -13,7 +13,6 @@ static void	hd_child_run(t_hd *h)
 	rl_catch_signals = 0;
 	rl_catch_sigwinch = 0;
 	g_sig = 0;
-
 	res = hd_read_loop(h);
 	close(h->fd);
 	if (res == 2)
@@ -29,14 +28,14 @@ static int	hd_apply_status(int status, int *last_status)
 	{
 		if (last_status)
 			*last_status = 130;
-			// *last_status = 1;
+		// *last_status = 1;
 		return (2);
 	}
 	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
 	{
 		if (last_status)
 			*last_status = 130;
-			// *last_status = 1;
+		// *last_status = 1;
 		return (2);
 	}
 	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
@@ -83,7 +82,10 @@ int	process_heredoc(t_redir *r, char **envp, int *last_status)
 	if (hd_init(&h, r, envp, last_status))
 		return (1);
 	if (hd_make_and_open(&h, &fname))
-		return (hd_cleanup_parent(&h), 1); //why? or how?
+	{
+		hd_cleanup_parent(&h);
+		return (1);
+	}
 	res = hd_fork_and_wait(&h, last_status);
 	free(h.delim);
 	h.delim = NULL;

@@ -1,8 +1,8 @@
 
-#include "heredoc.h"
-#include "signals.h"
 #include "expand.h"
+#include "heredoc.h"
 #include "libft.h"
+#include "signals.h"
 #include <readline/readline.h>
 
 static int	hd_is_delim(const char *line, const char *delim)
@@ -51,7 +51,7 @@ static int	hd_handle_line(t_hd *h, char *line)
 
 int	hd_read_loop(t_hd *h)
 {
-	char	*line;
+	char *line;
 
 	while (1)
 	{

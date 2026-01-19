@@ -4,7 +4,17 @@
 
 volatile sig_atomic_t	g_sig = 0;
 
-void	sigint_handler(int sig)
+void	set_signal_handler(int sig, __sighandler_t handler)
+{
+	struct sigaction	sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sa.sa_handler = handler;
+	sigaction(sig, &sa, NULL);
+}
+
+static void	sigint_handler(int sig)
 {
 	(void)sig;
 	g_sig = SIGINT;
@@ -16,30 +26,20 @@ void	sigint_handler(int sig)
 
 void	set_sig_interactive(void)
 {
-	struct sigaction	sa;
-
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
-	sa.sa_handler = sigint_handler;
-	sigaction(SIGINT, &sa, NULL);
-	signal(SIGQUIT, SIG_IGN);
+	set_signal_handler(SIGINT, sigint_handler);
+	set_signal_handler(SIGQUIT, SIG_IGN);
 }
 
 void	set_sig_child_default(void)
 {
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	set_signal_handler(SIGINT, SIG_DFL);
+	set_signal_handler(SIGQUIT, SIG_DFL);
 }
 
 void	set_sig_parent_ignore(void)
 {
-	struct sigaction	sa;
-
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
-	sa.sa_handler = SIG_IGN; 
-	sigaction(SIGINT, &sa, NULL);
-	signal(SIGQUIT, SIG_IGN);
+	set_signal_handler(SIGINT, SIG_IGN);
+	set_signal_handler(SIGQUIT, SIG_IGN);
 }
 
 // void	set_sig_parent_exec(void)

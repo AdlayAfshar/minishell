@@ -11,7 +11,8 @@ extern volatile sig_atomic_t	g_sig;
 extern int						rl_catch_signals;
 extern int						rl_catch_sigwinch;
 
-void							sigint_handler(int sig);
+void							set_signal_handler(int sig,
+									__sighandler_t handler);
 void							set_sig_interactive(void);
 // void							set_sig_heredoc_parent(void);
 void							set_sig_child_default(void);

@@ -1,10 +1,9 @@
 
-#include "exec.h"
 #include "builtins.h"
+#include "exec.h"
 #include "minishell.h"
 
-
-static int	exec_child_builtin(t_cmd *cmd, t_execctx *x)
+static int	exec_child_builtin(t_cmd *cmd, t_shell_ctx *ctx)
 {
 	char	**av;
 	char	*n;
@@ -16,17 +15,17 @@ static int	exec_child_builtin(t_cmd *cmd, t_execctx *x)
 	if (is_name(n, "echo"))
 		return (builtin_echo(av));
 	if (is_name(n, "env"))
-		return (builtin_env(av, *(x->envp)));
+		return (builtin_env(av, ctx->envp));
 	if (is_name(n, "export"))
-		return (builtin_export(av, x->envp));
+		return (builtin_export(av, &ctx->envp));
 	if (is_name(n, "unset"))
-		return (builtin_unset(av, x->envp));
+		return (builtin_unset(av, &ctx->envp));
 	if (is_name(n, "cd"))
-		return (builtin_cd(av, x->envp));
+		return (builtin_cd(av, &ctx->envp));
 	if (is_name(n, "pwd"))
 		return (builtin_pwd(av));
 	if (is_name(n, "exit"))
-		return (builtin_exit(av, *(x->last_status)));
+		return (builtin_exit(av, ctx->exit_status));
 	return (-1);
 }
 
@@ -78,7 +77,7 @@ static void	exec_external(t_cmd *cmd, char **envp)
 	exit(126);
 }
 
-void	exec_cmd_child(t_cmd *cmd, int in_fd, int out_fd, t_execctx *x)
+void	exec_cmd_child(t_cmd *cmd, int in_fd, int out_fd, t_shell_ctx *ctx)
 {
 	int	status;
 
@@ -88,12 +87,12 @@ void	exec_cmd_child(t_cmd *cmd, int in_fd, int out_fd, t_execctx *x)
 		exit(1);
 	if (!cmd->argv || !cmd->argv[0])
 		exit(0);
-	status = exec_child_builtin(cmd, x);
+	status = exec_child_builtin(cmd, ctx);
 	if (status != -1)
 	{
 		if (status >= EXIT_REQ_BASE)
 			status -= EXIT_REQ_BASE;
 		exit(status & 255);
 	}
-	exec_external(cmd, *(x->envp));
+	exec_external(cmd, (ctx->envp));
 }

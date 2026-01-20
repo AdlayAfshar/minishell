@@ -1,6 +1,7 @@
 
 #include "heredoc.h"
 #include "libft.h"
+#include "shell.h"
 #include "signals.h"
 #include <errno.h>
 #include <sys/wait.h>
@@ -21,30 +22,25 @@ static void	hd_child_run(t_hd *h)
 		exit(1);
 	exit(0);
 }
-// for porablem: 2 + file => line_exec.c  => func:run_heredocs + process_line
-static int	hd_apply_status(int status, int *last_status)
+
+static int	hd_apply_status(int status, t_shell_ctx *ctx)
 {
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
-		if (last_status)
-			*last_status = 130;
-		// *last_status = 1;
+		ctx->exit_status = 130;
 		return (2);
 	}
 	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
 	{
-		if (last_status)
-			*last_status = 130;
-		// *last_status = 1;
+		ctx->exit_status = 130;
 		return (2);
 	}
 	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
 		return (1);
 	return (0);
 }
-// for porablem: 2
 
-static int	hd_fork_and_wait(t_hd *h, int *last_status)
+static int	hd_fork_and_wait(t_hd *h, t_shell_ctx *ctx)
 {
 	pid_t	pid;
 	int		status;
@@ -68,10 +64,10 @@ static int	hd_fork_and_wait(t_hd *h, int *last_status)
 		}
 		break ;
 	}
-	return (hd_apply_status(status, last_status));
+	return (hd_apply_status(status, ctx));
 }
 
-int	process_heredoc(t_redir *r, char **envp, int *last_status)
+int	process_heredoc(t_redir *r, t_shell_ctx *ctx)
 {
 	t_hd	h;
 	char	*fname;
@@ -79,14 +75,14 @@ int	process_heredoc(t_redir *r, char **envp, int *last_status)
 
 	h.fd = -1;
 	h.delim = NULL;
-	if (hd_init(&h, r, envp, last_status))
+	if (hd_init(&h, r, ctx))
 		return (1);
 	if (hd_make_and_open(&h, &fname))
 	{
 		hd_cleanup_parent(&h);
 		return (1);
 	}
-	res = hd_fork_and_wait(&h, last_status);
+	res = hd_fork_and_wait(&h, ctx);
 	free(h.delim);
 	h.delim = NULL;
 	if (res != 0)

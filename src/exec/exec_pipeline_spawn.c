@@ -1,7 +1,8 @@
 
 #include "exec.h"
+#include "shell.h"
 
-static int	spawn_one(t_cmd *cur, t_spawn *s, t_execctx *x)
+static int	spawn_one(t_cmd *cur, t_spawn *s, t_shell_ctx *ctx)
 {
 	int	pipe_fd[2];
 
@@ -14,7 +15,7 @@ static int	spawn_one(t_cmd *cur, t_spawn *s, t_execctx *x)
 		return (1);
 	}
 	if (s->pids[s->i] == 0)
-		child_side(cur, *(s->prev_fd), pipe_fd, x);
+		child_side(cur, *(s->prev_fd), pipe_fd, ctx);
 	*(s->prev_fd) = parent_side(*(s->prev_fd), pipe_fd);
 	return (0);
 }
@@ -27,7 +28,7 @@ int	cleanup_spawn_fail(pid_t *pids, int prev_fd)
 	return (1);
 }
 
-int	spawn_all(t_cmd *cmd, t_spawn *s, t_execctx *x, int *count)
+int	spawn_all(t_cmd *cmd, t_spawn *s, t_shell_ctx *x, int *count)
 {
 	t_cmd	*cur;
 	int		i;

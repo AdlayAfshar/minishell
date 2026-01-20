@@ -1,8 +1,9 @@
 
 #include "heredoc.h"
+#include "shell.h"
 #include "signals.h"
 
-static int	hd_process_redirs(t_redir *r, char **envp, int *last_status)
+static int	hd_process_redirs(t_redir *r, t_shell_ctx *ctx)
 {
 	int	res;
 
@@ -10,7 +11,7 @@ static int	hd_process_redirs(t_redir *r, char **envp, int *last_status)
 	{
 		if (r->type == R_HEREDOC)
 		{
-			res = process_heredoc(r, envp, last_status);
+			res = process_heredoc(r, ctx);
 			if (res != 0)
 				return (res);
 		}
@@ -19,15 +20,15 @@ static int	hd_process_redirs(t_redir *r, char **envp, int *last_status)
 	return (0);
 }
 
-static int	hd_process_cmds(t_cmd *cmds, char **envp, int *last_status)
+static int	hd_process_cmds(t_shell_ctx *ctx)
 {
 	t_cmd	*cur;
 	int		res;
 
-	cur = cmds;
+	cur = ctx->cmds;
 	while (cur)
 	{
-		res = hd_process_redirs(cur->redirs, envp, last_status);
+		res = hd_process_redirs(cur->redirs, ctx);
 		if (res != 0)
 			return (res);
 		cur = cur->next;
@@ -45,12 +46,12 @@ static int	hd_finish(int res)
 	return (0);
 }
 
-int	setup_heredocs(t_cmd *cmds, char **envp, int *last_status)
+int	setup_heredocs(t_shell_ctx *ctx)
 {
 	int	res;
 
 	g_sig = 0;
 	set_sig_ignore();
-	res = hd_process_cmds(cmds, envp, last_status);
+	res = hd_process_cmds(ctx);
 	return (hd_finish(res));
 }

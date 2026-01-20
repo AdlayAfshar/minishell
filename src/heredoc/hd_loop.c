@@ -15,14 +15,15 @@ static int	hd_is_delim(const char *line, const char *delim)
 	return (ft_strncmp(line, delim, dlen + 1) == 0);
 }
 
-static char	*hd_expand_if_needed(t_hd *h, char *line, int *need_free)
+static char	*hd_expand_if_needed(t_hd *h, char *line, int *need_free,
+		t_shell_ctx *ctx)
 {
 	char	*exp;
 
 	*need_free = 0;
 	if (h->quoted)
 		return (line);
-	exp = expand_word(line, h->envp, h->last_status);
+	exp = expand_word(line, ctx);
 	if (!exp)
 		return (NULL);
 	if (exp != line)
@@ -30,12 +31,12 @@ static char	*hd_expand_if_needed(t_hd *h, char *line, int *need_free)
 	return (exp);
 }
 
-static int	hd_handle_line(t_hd *h, char *line)
+static int	hd_handle_line(t_hd *h, char *line, t_shell_ctx *ctx)
 {
 	char	*exp;
 	int		need_free;
 
-	exp = hd_expand_if_needed(h, line, &need_free);
+	exp = hd_expand_if_needed(h, line, &need_free, ctx);
 	if (!exp)
 		return (1);
 	if (hd_write_line(h->fd, exp))
@@ -49,7 +50,7 @@ static int	hd_handle_line(t_hd *h, char *line)
 	return (0);
 }
 
-int	hd_read_loop(t_hd *h)
+int	hd_read_loop(t_hd *h, t_shell_ctx *ctx)
 {
 	char *line;
 
@@ -69,7 +70,7 @@ int	hd_read_loop(t_hd *h)
 			free(line);
 			break ;
 		}
-		if (hd_handle_line(h, line))
+		if (hd_handle_line(h, line, ctx))
 			return (free(line), 1);
 		free(line);
 	}

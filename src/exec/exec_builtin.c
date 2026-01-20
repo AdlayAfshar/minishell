@@ -1,6 +1,6 @@
 
-#include "exec.h"
 #include "builtins.h"
+#include "exec.h"
 #include "minishell.h"
 
 int	is_builtin_name(char *name)
@@ -24,7 +24,7 @@ int	is_builtin_name(char *name)
 	return (0);
 }
 
-static int	run_builtin_cmd(t_cmd *cmd, t_execctx *x)
+static int	run_builtin_cmd(t_cmd *cmd, t_shell_ctx *ctx)
 {
 	char	**av;
 
@@ -34,17 +34,17 @@ static int	run_builtin_cmd(t_cmd *cmd, t_execctx *x)
 	if (is_str(av[0], "echo"))
 		return (builtin_echo(av));
 	if (is_str(av[0], "cd"))
-		return (builtin_cd(av, x->envp));
+		return (builtin_cd(av, &ctx->envp));
 	if (is_str(av[0], "pwd"))
 		return (builtin_pwd(av));
 	if (is_str(av[0], "env"))
-		return (builtin_env(av, *(x->envp)));
+		return (builtin_env(av, (ctx->envp)));
 	if (is_str(av[0], "export"))
-		return (builtin_export(av, x->envp));
+		return (builtin_export(av, &ctx->envp));
 	if (is_str(av[0], "unset"))
-		return (builtin_unset(av, x->envp));
+		return (builtin_unset(av, &ctx->envp));
 	if (is_str(av[0], "exit"))
-		return (builtin_exit(av, *(x->last_status)));
+		return (builtin_exit(av, ctx->exit_status));
 	return (0);
 }
 
@@ -70,7 +70,7 @@ static void	restore_stdio(int saved[2])
 	close(saved[1]);
 }
 
-int	exec_builtin(t_cmd *cmd, t_execctx *x)
+int	exec_builtin(t_cmd *cmd, t_shell_ctx *ctx)
 {
 	int	saved[2];
 	int	status;
@@ -82,7 +82,7 @@ int	exec_builtin(t_cmd *cmd, t_execctx *x)
 		restore_stdio(saved);
 		return (1);
 	}
-	status = run_builtin_cmd(cmd, x);
+	status = run_builtin_cmd(cmd, ctx);
 	restore_stdio(saved);
 	return (status);
 }

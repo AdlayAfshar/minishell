@@ -21,23 +21,22 @@ static size_t	next_break_pos(char *line, size_t i)
 	return (i);
 }
 
-static int	process_one_subline(char *line, size_t start, size_t end,
-		t_line_ctx *ctx)
+static int	process_one_subline(t_shell_ctx *ctx, size_t start, size_t end)
 {
-	char	*one;
-	int		st;
+	int	st;
 
-	one = ft_substr(line, start, end - start);
-	if (!one)
+	ctx->current_subline = ft_substr(ctx->line, start, end - start);
+	if (!ctx->current_subline)
 		return (0);
 	st = 0;
-	if (one[0] != '\0')
+	if (ctx->current_subline[0] != '\0')
 	{
-		trim_cr(one);
-		add_history(one);
-		st = process_line(one, ctx->envp, ctx->exit_status);
+		trim_cr(ctx->current_subline);
+		add_history(ctx->current_subline);
+		st = process_line(ctx);
 	}
-	free(one);
+	free(ctx->current_subline);
+	ctx->current_subline = NULL;
 	return (st);
 }
 
@@ -54,25 +53,24 @@ static void	replace_cr_with_nl(char *line)
 	}
 }
 
-int	process_pasted_lines(char *line, char ***envp, int *exit_status)
+int	process_pasted_lines(t_shell_ctx *ctx)
 {
-	size_t		i;
-	size_t		start;
-	int			st;
-	t_line_ctx	ctx;
+	size_t	i;
+	size_t	start;
+	int		st;
 
-	ctx.envp = envp;
-	ctx.exit_status = exit_status;
 	i = 0;
 	start = 0;
-	replace_cr_with_nl(line);
+	replace_cr_with_nl(ctx->line);
 	while (1)
 	{
-		i = next_break_pos(line, start);
-		st = process_one_subline(line, start, i, &ctx);
+		i = next_break_pos(ctx->line, start);
+		st = process_one_subline(ctx, start, i);
 		if (st >= EXIT_REQ_BASE)
 			return (st);
-		if (line[i] == '\0')
+		else
+			ctx->exit_status = st;
+		if (ctx->line[i] == '\0')
 			break ;
 		start = i + 1;
 	}

@@ -141,146 +141,57 @@ static t_cmd	*lex_parse_line(char *line)
 
 	ts = lex_line(line);
 	if (!ts)
+	{
+		write(1, "Syntax Error\n", 13);
 		return (NULL);
+	}
 	cmds = parse_tokens(ts);
 	token_list_clear(&ts);
 	return (cmds);
 }
 
-static int	expand_cmds(t_cmd *cmds, char **envp, int exit_status)
-{
-	if (expand_all(cmds, envp, exit_status))
-	{
-		// free_cmds(cmds); // maybe error: double free 1
-		return (1);
-	}
-	return (0);
-}
-
-// for porablem: 2 ==> process_line + file => hd_process.c  => func:hd_apply_status
-static int	run_heredocs(t_cmd *cmds, char **envp, int *exit_status)
+static int	run_heredocs(t_shell_ctx *ctx)
 {
 	int	hd;
 
-	hd = setup_heredocs(cmds, envp, exit_status);
+	hd = setup_heredocs(ctx);
 	if (hd == 2)
 		return (2);
 	if (hd != 0)
 	{
-		if (exit_status)
-			*exit_status = 1;
+		ctx->exit_status = 1;
 		return (1);
 	}
 	return (0);
 }
-// for porablem: 2 
 
-// static int	run_heredocs(t_cmd *cmds, char **envp, int *exit_status)
-// {
-// 	int	hd;
-
-// 	hd = setup_heredocs(cmds, envp, exit_status);
-// 	if (hd != 0)
-// 	{
-// 		free_cmds(cmds); // maybe error: double free 2
-// 		return (1);
-// 	}
-// 	return (0);
-// }
-
-static void	exec_cmds(t_cmd *cmds, char ***envp, int *exit_status)
+static void	exec_cmds(t_shell_ctx *ctx)
 {
-	t_execctx	x;
-
-	x.envp = envp;
-	x.last_status = exit_status;
-	*exit_status = exec_pipeline(cmds, &x);
-	free_cmds(cmds);
+	ctx->exit_status = exec_pipeline(ctx);
+	free_cmds(ctx->cmds);
+	ctx->cmds = NULL;
 }
 
-// for porablem: 2 ==> run_heredocs + file => hd_process.c  => func:hd_apply_status
-
-int	process_line(char *line, char ***envp, int *exit_status)
+int	process_line(t_shell_ctx *ctx)
 {
-	t_cmd	*cmds;
-	int		st;
+	int	st;
 
-	cmds = lex_parse_line(line);
-	if (!cmds)
-		return (0);
-	if (expand_cmds(cmds, *envp, *exit_status))
+	ctx->cmds = lex_parse_line(ctx->current_subline);
+	if (!ctx->cmds)
+		return (127);
+	if (expand_all(ctx))
 	{
-		free_cmds(cmds);
+		free_cmds(ctx->cmds);
 		return (1);
 	}
-	st = run_heredocs(cmds, *envp, exit_status);
+	st = run_heredocs(ctx);
 	if (st != 0)
 	{
-		free_cmds(cmds);
+		free_cmds(ctx->cmds);
 		if (st == 2)
-			return (*exit_status);
+			return (ctx->exit_status);
 		return (1);
 	}
-	exec_cmds(cmds, envp, exit_status);
-	st = *exit_status;
-	return (st);
+	exec_cmds(ctx);
+	return (ctx->exit_status);
 }
-
-// or
-// int	process_line(char *line, char ***envp, int *exit_status)
-// {
-// 	t_cmd	*cmds;
-// 	int		st;
-
-// 	cmds = lex_parse_line(line);
-// 	if (!cmds)
-// 		return (0);
-
-// 	if (expand_cmds(cmds, *envp, *exit_status))
-// 	{
-// 		free_cmds(cmds);
-// 		if (exit_status)
-// 			*exit_status = 1;
-// 		return (1);
-// 	}
-
-// 	st = run_heredocs(cmds, *envp, exit_status);
-// 	if (st != 0)
-// 	{
-// 		free_cmds(cmds);
-// 		if (st == 2)
-// 			return (*exit_status);
-// 		if (exit_status)
-// 			*exit_status = 1;
-// 		return (1);
-// 	}
-
-// 	exec_cmds(cmds, envp, exit_status);
-// 	free_cmds(cmds);
-// 	return (*exit_status);
-// }
-
-// for porablem: 2
-
-// int	process_line(char *line, char ***envp, int *exit_status)
-// {
-// 	t_cmd	*cmds;
-// 	int		st;
-
-// 	cmds = lex_parse_line(line);
-// 	if (!cmds)
-// 		return (0);
-// 	if (expand_cmds(cmds, *envp, *exit_status))
-// 	{
-// 		free_cmds(cmds); // maybe error: double free 1
-// 		return (1);
-// 	}
-// 	if (run_heredocs(cmds, *envp, exit_status))
-// 	{
-// 		free_cmds(cmds); // maybe error: double free 2
-// 		return (1);
-// 	}
-// 	exec_cmds(cmds, envp, exit_status);
-// 	st = *exit_status;
-// 	return (st);
-// }

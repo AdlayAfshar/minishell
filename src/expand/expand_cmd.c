@@ -1,7 +1,8 @@
 
 #include "expand.h"
+#include "shell.h"
 
-static int	expand_argv(char ***pargv, char **envp, int last_status)
+static int	expand_argv(char ***pargv, t_shell_ctx *ctx)
 {
 	char	**argv;
 	int		i;
@@ -13,7 +14,7 @@ static int	expand_argv(char ***pargv, char **envp, int last_status)
 	i = 0;
 	while (argv[i])
 	{
-		new = expand_word(argv[i], envp, last_status);
+		new = expand_word(argv[i], ctx);
 		if (!new)
 			return (1);
 		free(argv[i]);
@@ -23,7 +24,7 @@ static int	expand_argv(char ***pargv, char **envp, int last_status)
 	return (0);
 }
 
-static int	expand_redirs(t_redir *r, char **envp, int last_status)
+static int	expand_redirs(t_redir *r, t_shell_ctx *ctx)
 {
 	char	*new;
 
@@ -34,7 +35,7 @@ static int	expand_redirs(t_redir *r, char **envp, int last_status)
 			r = r->next;
 			continue ;
 		}
-		new = expand_word(r->target, envp, last_status);
+		new = expand_word(r->target, ctx);
 		if (!new)
 			return (1);
 		free(r->target);
@@ -44,27 +45,27 @@ static int	expand_redirs(t_redir *r, char **envp, int last_status)
 	return (0);
 }
 
-static int	expand_cmd_list(t_cmd *cmds, char **envp, int last_status)
+static int	expand_cmd_list(t_shell_ctx *ctx)
 {
 	t_cmd	*cur;
 
-	cur = cmds;
+	cur = ctx->cmds;
 	while (cur)
 	{
-		if (expand_argv(&cur->argv, envp, last_status))
+		if (expand_argv(&cur->argv, ctx))
 			return (1);
-		if (expand_redirs(cur->redirs, envp, last_status))
+		if (expand_redirs(cur->redirs, ctx))
 			return (1);
 		cur = cur->next;
 	}
 	return (0);
 }
 
-int	expand_all(t_cmd *cmds, char **envp, int last_status)
+int	expand_all(t_shell_ctx *ctx)
 {
-	if (!cmds)
+	if (!ctx->cmds)
 		return (0);
-	if (expand_cmd_list(cmds, envp, last_status))
+	if (expand_cmd_list(ctx))
 		return (1);
 	return (0);
 }

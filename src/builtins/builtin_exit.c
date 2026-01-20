@@ -60,8 +60,8 @@ static int	handle_exit_args(char **argv, int last_status, int *should_exit)
 
 int	builtin_exit(char **argv, int last_status)
 {
-	int	status;
-	int	should_exit;
+	int status;
+	int should_exit;
 
 	status = handle_exit_args(argv, last_status, &should_exit);
 	if (should_exit)

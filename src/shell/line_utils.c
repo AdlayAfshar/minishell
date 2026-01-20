@@ -23,20 +23,20 @@ static size_t	next_break_pos(char *line, size_t i)
 
 static int	process_one_subline(t_shell_ctx *ctx, size_t start, size_t end)
 {
-	char	*line;
-	int		st;
+	int	st;
 
-	line = ft_substr(ctx->line, start, end - start);
-	if (!line)
+	ctx->current_subline = ft_substr(ctx->line, start, end - start);
+	if (!ctx->current_subline)
 		return (0);
 	st = 0;
-	if (line[0] != '\0')
+	if (ctx->current_subline[0] != '\0')
 	{
-		trim_cr(line);
-		add_history(line);
+		trim_cr(ctx->current_subline);
+		add_history(ctx->current_subline);
 		st = process_line(ctx);
 	}
-	free(line);
+	free(ctx->current_subline);
+	ctx->current_subline = NULL;
 	return (st);
 }
 

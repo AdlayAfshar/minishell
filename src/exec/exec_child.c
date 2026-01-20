@@ -53,28 +53,32 @@ static void	exec_with_sh(char *path, char **envp)
 	execve("/bin/sh", av, envp);
 }
 
-static void	exec_external(t_cmd *cmd, char **envp)
+static void	exec_external(t_cmd *cmd, t_shell_ctx *ctx)
 {
 	char	*path;
 	int		e;
 
-	path = find_in_path(cmd->argv[0], envp);
+	path = find_in_path(cmd->argv[0], ctx->envp);
 	if (!path)
 	{
 		write(2, "minishell: command not found\n", 29);
-		exit(127);
+		exit_and_clear_ctx(127, ctx);
 	}
-	execve(path, cmd->argv, envp);
+	execve(path, cmd->argv, ctx->envp);
 	e = errno;
 	if (e == ENOEXEC)
-		exec_with_sh(path, envp);
+		exec_with_sh(path, ctx->envp);
 	perror(path);
 	free(path);
 	if (e == ENOENT)
-		exit(127);
+	{
+		exit_and_clear_ctx(127, ctx);
+	}
 	if (e == EACCES || e == EISDIR)
-		exit(126);
-	exit(126);
+	{
+		exit_and_clear_ctx(126, ctx);
+	}
+	exit_and_clear_ctx(127, ctx);
 }
 
 void	exec_cmd_child(t_cmd *cmd, int in_fd, int out_fd, t_shell_ctx *ctx)
@@ -92,7 +96,10 @@ void	exec_cmd_child(t_cmd *cmd, int in_fd, int out_fd, t_shell_ctx *ctx)
 	{
 		if (status >= EXIT_REQ_BASE)
 			status -= EXIT_REQ_BASE;
-		exit(status & 255);
+		{
+			free_ctx(ctx);
+			exit(status & 255);
+		}
 	}
-	exec_external(cmd, (ctx->envp));
+	exec_external(cmd, ctx);
 }

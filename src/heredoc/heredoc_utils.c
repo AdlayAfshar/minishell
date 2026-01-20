@@ -28,15 +28,15 @@ int	hd_init(t_hd *h, t_redir *r, t_shell_ctx *ctx)
 	return (0);
 }
 
-int	hd_make_and_open(t_hd *h, char **out_name)
+int	hd_make_and_open(t_hd *h)
 {
-	*out_name = hd_make_name();
-	if (!*out_name)
+	h->file_name = hd_make_name();
+	if (!h->file_name)
 		return (1);
-	if (hd_open_outfile(*out_name, &h->fd))
+	if (hd_open_outfile(h->file_name, &h->fd))
 	{
-		free(*out_name);
-		*out_name = NULL;
+		free(h->file_name);
+		h->file_name = NULL;
 		return (1);
 	}
 	return (0);

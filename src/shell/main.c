@@ -6,6 +6,8 @@
 static void	shell_init(char **envp_in, t_shell_ctx *ctx)
 {
 	ctx->exit_status = 0;
+	ctx->prev_fd = -1;
+	ctx->pids = NULL;
 	ctx->envp = dup_env(envp_in);
 	ms_set_termios(0);
 	rl_catch_signals = 0;
@@ -37,9 +39,21 @@ static int	shell_loop(t_shell_ctx *ctx)
 	return (0);
 }
 
+void	exit_and_clear_ctx(int exit_code, t_shell_ctx *ctx)
+{
+	free_ctx(ctx);
+	exit(exit_code);
+}
+
 void	free_ctx(t_shell_ctx *ctx)
 {
 	free_env(ctx->envp);
+	free_cmds(ctx->cmds);
+	free(ctx->line);
+	if (ctx->current_subline)
+		free(ctx->current_subline);
+	if (ctx->pids)
+		free(ctx->pids);
 }
 
 int	main(int argc, char **argv, char **envp_in)

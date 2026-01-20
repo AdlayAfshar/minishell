@@ -60,7 +60,6 @@ int	wait_for_children(pid_t *pids, int count)
 			last = handle_child_status(status, &printed);
 		i++;
 	}
-	free(pids);
 	return (last);
 }
 

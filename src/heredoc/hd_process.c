@@ -6,21 +6,31 @@
 #include <errno.h>
 #include <sys/wait.h>
 
-static void	hd_child_run(t_hd *h)
+void	free_hd(t_hd *hd)
+{
+	free(hd->delim);
+	free(hd->file_name);
+}
+
+static void	hd_child_run(t_hd *h, t_shell_ctx *ctx)
 {
 	int	res;
+	int	code;
 
+	code = 0;
 	set_sig_heredoc_child();
 	rl_catch_signals = 0;
 	rl_catch_sigwinch = 0;
 	g_sig = 0;
-	res = hd_read_loop(h);
+	res = hd_read_loop(h, ctx);
 	close(h->fd);
 	if (res == 2)
-		exit(130);
+		code = 130;
 	if (res != 0)
-		exit(1);
-	exit(0);
+		code = 1;
+	free_ctx(ctx);
+	free_hd(h);
+	exit(code);
 }
 
 static int	hd_apply_status(int status, t_shell_ctx *ctx)
@@ -50,7 +60,7 @@ static int	hd_fork_and_wait(t_hd *h, t_shell_ctx *ctx)
 	if (pid < 0)
 		return (perror("fork"), 1);
 	if (pid == 0)
-		hd_child_run(h);
+		hd_child_run(h, ctx);
 	close(h->fd);
 	while (1)
 	{
@@ -70,22 +80,23 @@ static int	hd_fork_and_wait(t_hd *h, t_shell_ctx *ctx)
 int	process_heredoc(t_redir *r, t_shell_ctx *ctx)
 {
 	t_hd	h;
-	char	*fname;
 	int		res;
 
 	h.fd = -1;
 	h.delim = NULL;
 	if (hd_init(&h, r, ctx))
 		return (1);
-	if (hd_make_and_open(&h, &fname))
+	if (hd_make_and_open(&h))
 	{
 		hd_cleanup_parent(&h);
 		return (1);
 	}
 	res = hd_fork_and_wait(&h, ctx);
 	free(h.delim);
-	h.delim = NULL;
 	if (res != 0)
-		return (unlink(fname), free(fname), res);
-	return (hd_set_target(r, fname));
+	{
+		unlink(h.file_name);
+		return (res);
+	}
+	return (hd_set_target(r, h.file_name));
 }

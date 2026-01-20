@@ -169,13 +169,14 @@ static void	exec_cmds(t_shell_ctx *ctx)
 {
 	ctx->exit_status = exec_pipeline(ctx);
 	free_cmds(ctx->cmds);
+	ctx->cmds = NULL;
 }
 
 int	process_line(t_shell_ctx *ctx)
 {
 	int	st;
 
-	ctx->cmds = lex_parse_line(ctx->line);
+	ctx->cmds = lex_parse_line(ctx->current_subline);
 	if (!ctx->cmds)
 		return (127);
 	if (expand_all(ctx))

@@ -49,12 +49,12 @@ int	append_str(t_exp *e, const char *str)
 	return (0);
 }
 
-int	expand_status(size_t *i, t_exp *e)
+int	expand_status(size_t *i, t_exp *e, t_shell_ctx *ctx)
 {
 	char	*tmp;
 	int		res;
 
-	tmp = ft_itoa(e->last_status);
+	tmp = ft_itoa(ctx->exit_status);
 	if (!tmp)
 		return (1);
 	res = append_str(e, tmp);
@@ -65,11 +65,11 @@ int	expand_status(size_t *i, t_exp *e)
 	return (0);
 }
 
-int	expand_env_var(const char *s, size_t *i, t_exp *e)
+int	expand_env_var(const char *s, size_t *i, t_exp *e, t_shell_ctx *ctx)
 {
-	char	name[256];
-	size_t	j;
-	char	*val;
+	char name[256];
+	size_t j;
+	char *val;
 
 	j = 0;
 	while (s[*i] && is_var_char(s[*i]) && j < 255)
@@ -79,7 +79,7 @@ int	expand_env_var(const char *s, size_t *i, t_exp *e)
 		(*i)++;
 	}
 	name[j] = '\0';
-	val = exp_get_env_val(name, e->envp);
+	val = exp_get_env_val(name, ctx->envp);
 	if (append_str(e, val))
 		return (1);
 	return (0);

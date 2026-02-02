@@ -17,37 +17,37 @@ int	count_cmds(t_cmd *cmd)
 	return (n);
 }
 
-static int	run_single_builtin(t_cmd *cmd, t_execctx *x)
+static int	run_single_builtin(t_cmd *cmd, t_shell_ctx *ctx)
 {
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (0);
 	if (!is_builtin_name(cmd->argv[0]))
 		return (-1);
-	return (exec_builtin(cmd, x));
+	return (exec_builtin(cmd, ctx));
 }
 
-int	exec_pipeline(t_cmd *cmd, t_execctx *x)
+int	exec_pipeline(t_shell_ctx *ctx)
 {
 	int cmd_count;
 	int status;
 
-	if (!cmd)
+	if (!ctx->cmds)
 		return (0);
-	cmd_count = count_cmds(cmd);
+	cmd_count = count_cmds(ctx->cmds);
 	if (cmd_count == 1)
 	{
-		status = run_single_builtin(cmd, x);
+		status = run_single_builtin(ctx->cmds, ctx);
 		if (status >= 0)
 		{
-			*(x->last_status) = status;
+			ctx->exit_status = status;
 			return (status);
 		}
 	}
 	ms_set_termios(1);
 	set_sig_ignore();
-	status = spawn_cmds(cmd, *(x->envp), *(x->last_status));
+	status = spawn_cmds(ctx->cmds, ctx);
 	set_sig_interactive();
 	ms_set_termios(0);
-	*(x->last_status) = status;
+	ctx->exit_status = status;
 	return (status);
 }

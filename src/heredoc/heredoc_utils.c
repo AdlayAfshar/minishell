@@ -1,8 +1,9 @@
 
 #include "heredoc.h"
+#include "shell.h"
 #include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
-#include <fcntl.h> 
 
 static int	hd_open_outfile(const char *fname, int *fd)
 {
@@ -15,29 +16,27 @@ static int	hd_open_outfile(const char *fname, int *fd)
 	return (0);
 }
 
-int	hd_init(t_hd *h, t_redir *r, char **envp, int *last_status)
+int	hd_init(t_hd *h, t_redir *r, t_shell_ctx *ctx)
 {
 	h->delim = hd_unquote_delim(r->target);
 	if (!h->delim)
 		return (1);
 	h->quoted = r->heredoc_quoted;
-	h->envp = envp;
-	if (last_status)
-		h->last_status = *last_status;
-	else
-		h->last_status = 0;
+	h->envp = ctx->envp;
+	// TODO check if needed
+	h->last_status = ctx->exit_status;
 	return (0);
 }
 
-int	hd_make_and_open(t_hd *h, char **out_name)
+int	hd_make_and_open(t_hd *h)
 {
-	*out_name = hd_make_name();
-	if (!*out_name)
+	h->file_name = hd_make_name();
+	if (!h->file_name)
 		return (1);
-	if (hd_open_outfile(*out_name, &h->fd))
+	if (hd_open_outfile(h->file_name, &h->fd))
 	{
-		free(*out_name);
-		*out_name = NULL;
+		free(h->file_name);
+		h->file_name = NULL;
 		return (1);
 	}
 	return (0);

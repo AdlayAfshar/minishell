@@ -1,5 +1,6 @@
 
 #include "terminal.h"
+#include "shell.h"
 
 void	ms_set_termios(int on)
 {
@@ -13,3 +14,9 @@ void	ms_set_termios(int on)
 		t.c_lflag &= ~ECHOCTL;
 	tcsetattr(STDIN_FILENO, TCSANOW, &t);
 }
+
+void	ms_restore_termios(t_shell_ctx *ctx)
+{
+	tcsetattr(STDIN_FILENO, TCSANOW, &ctx->term_orig);
+}
+

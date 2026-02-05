@@ -26,7 +26,7 @@ static void	hd_child_run(t_hd *h, t_shell_ctx *ctx)
 	close(h->fd);
 	if (res == 2)
 		code = 130;
-	if (res != 0)
+	else if (res != 0)
 		code = 1;
 	free_ctx(ctx);
 	free_hd(h);
@@ -96,6 +96,7 @@ int	process_heredoc(t_redir *r, t_shell_ctx *ctx)
 	if (res != 0)
 	{
 		unlink(h.file_name);
+		free(h.file_name);
 		return (res);
 	}
 	return (hd_set_target(r, h.file_name));

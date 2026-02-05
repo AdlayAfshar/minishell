@@ -50,21 +50,31 @@ static int	hd_handle_line(t_hd *h, char *line, t_shell_ctx *ctx)
 	return (0);
 }
 
+static void	hd_warn_eof(t_hd *h)
+{
+	if (!h || !h->delim)
+		return ;
+	write(2,
+		"minishell: warning: here-document delimited by end-of-file (wanted `",
+		69);
+	write(2, h->delim, ft_strlen(h->delim));
+	write(2, "')\n", 3);
+}
+
 int	hd_read_loop(t_hd *h, t_shell_ctx *ctx)
 {
-	char *line;
+	char	*line;
 
 	while (1)
 	{
 		line = readline("> ");
 		if (g_sig == SIGINT)
-		{
-			if (line)
-				free(line);
-			return (2);
-		}
+			return (free(line), 2);
 		if (!line)
+		{
+			hd_warn_eof(h);
 			return (0);
+		}
 		if (hd_is_delim(line, h->delim))
 		{
 			free(line);
@@ -76,3 +86,33 @@ int	hd_read_loop(t_hd *h, t_shell_ctx *ctx)
 	}
 	return (0);
 }
+
+// int	hd_read_loop(t_hd *h, t_shell_ctx *ctx)
+// {
+// 	char *line;
+
+// 	while (1)
+// 	{
+// 		line = readline("> ");
+// 		if (g_sig == SIGINT)
+// 		{
+// 			if (line)
+// 				free(line);
+// 			return (2);
+// 		}
+// 		if (!line)
+// 		{
+// 			hd_warn_eof(h);
+// 			return (0);
+// 		}
+// 		if (hd_is_delim(line, h->delim))
+// 		{
+// 			free(line);
+// 			break ;
+// 		}
+// 		if (hd_handle_line(h, line, ctx))
+// 			return (free(line), 1);
+// 		free(line);
+// 	}
+// 	return (0);
+// }

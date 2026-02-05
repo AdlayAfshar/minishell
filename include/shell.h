@@ -1,6 +1,7 @@
 #ifndef SHELL_H
 # define SHELL_H
 # include <sys/types.h>
+# include <termios.h>
 
 typedef struct s_cmd	t_cmd;
 typedef struct s_shell_ctx
@@ -12,6 +13,7 @@ typedef struct s_shell_ctx
 	pid_t				*pids;
 	int					prev_fd;
 	int					exit_status;
+	struct termios		term_orig;
 
 }						t_shell_ctx;
 

@@ -4,15 +4,23 @@
 
 extern int	rl_done;
 
-static void	sigint_heredoc_child(int sig)
-{
-	g_sig = sig;
-	rl_done = 1;
-	ioctl(0, TIOCSTI, "\n");
-}
+// static void	sigint_heredoc_child(int sig)
+// {
+// 	g_sig = sig;
+// 	rl_done = 1;
+// 	ioctl(0, TIOCSTI, "\n");
+// 	// close (0);
+// }
+
+// void	set_sig_heredoc_child(void)
+// {
+// 	set_signal_handler(SIGINT, sigint_heredoc_child);
+// 	set_signal_handler(SIGQUIT, SIG_IGN);
+// }
+
 
 void	set_sig_heredoc_child(void)
 {
-	set_signal_handler(SIGINT, sigint_heredoc_child);
+	set_signal_handler(SIGINT, SIG_DFL);
 	set_signal_handler(SIGQUIT, SIG_IGN);
 }

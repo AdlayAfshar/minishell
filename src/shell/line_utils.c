@@ -31,7 +31,7 @@ static int	process_one_subline(t_shell_ctx *ctx, size_t start, size_t end)
 	st = 0;
 	if (ctx->current_subline[0] != '\0')
 	{
-		trim_cr(ctx->current_subline);
+		// trim_cr(ctx->current_subline);
 		add_history(ctx->current_subline);
 		st = process_line(ctx);
 	}

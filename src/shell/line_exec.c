@@ -178,16 +178,21 @@ int	process_line(t_shell_ctx *ctx)
 
 	ctx->cmds = lex_parse_line(ctx->current_subline);
 	if (!ctx->cmds)
-		return (127);
+	{
+		ctx->exit_status = 2;
+		return (2);
+	}
 	if (expand_all(ctx))
 	{
 		free_cmds(ctx->cmds);
+		ctx->cmds = NULL;
 		return (1);
 	}
 	st = run_heredocs(ctx);
 	if (st != 0)
 	{
 		free_cmds(ctx->cmds);
+		ctx->cmds = NULL;
 		if (st == 2)
 			return (ctx->exit_status);
 		return (1);

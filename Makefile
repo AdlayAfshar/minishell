@@ -33,6 +33,7 @@ SRCS	= src/shell/main.c \
 		  src/env/env_env.c \
 		  src/env/env_get.c \
 		  src/builtins/builtin_exit.c \
+		  src/builtins/builtin_exit_utils.c \
 		  src/builtins/builtin_pwd.c \
 		  src/expand/expand_utils.c \
 		  src/expand/expand_word.c \

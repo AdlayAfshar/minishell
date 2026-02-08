@@ -16,5 +16,6 @@ int							builtin_exit(char **argv, int last_status);
 int							is_builtin_name(char *name);
 int							exec_builtin(t_cmd *cmd, t_shell_ctx *ctx);
 int							is_valid_key(const char *key);
+int							ms_atoll_strict(const char *s, long long *out);
 
 #endif

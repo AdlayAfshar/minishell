@@ -134,6 +134,12 @@
 // 	return (cmds);
 // }
 
+// static void	dbg(const char *msg)
+// {
+// 	write(2, msg, ft_strlen(msg));
+// 	write(2, "\n", 1);
+// }
+
 static t_cmd	*lex_parse_line(char *line)
 {
 	t_token	*ts;
@@ -148,6 +154,22 @@ static t_cmd	*lex_parse_line(char *line)
 	cmds = parse_tokens(ts);
 	token_list_clear(&ts);
 	return (cmds);
+}
+
+static int	line_is_blank(char *line)
+{
+	size_t	i;
+
+	if (!line)
+		return (1);
+	i = 0;
+	while (line[i])
+	{
+		if (!is_space(line[i]))
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 static int	run_heredocs(t_shell_ctx *ctx)
@@ -176,6 +198,8 @@ int	process_line(t_shell_ctx *ctx)
 {
 	int	st;
 
+	if (line_is_blank(ctx->current_subline))
+		return (ctx->exit_status);
 	ctx->cmds = lex_parse_line(ctx->current_subline);
 	if (!ctx->cmds)
 	{
@@ -200,3 +224,45 @@ int	process_line(t_shell_ctx *ctx)
 	exec_cmds(ctx);
 	return (ctx->exit_status);
 }
+
+// int	process_line(t_shell_ctx *ctx)
+// {
+// 	int	st;
+
+// 	// dbg("A: process_line start");
+// 	if (line_is_blank(ctx->current_subline))
+// 		return (ctx->exit_status);
+// 	ctx->cmds = lex_parse_line(ctx->current_subline);
+// 	if (!ctx->cmds)
+// 	{
+// 		// dbg("A1: lex_parse_line returned NULL");
+// 		ctx->exit_status = 2;
+// 		return (2);
+// 	}
+// 	// dbg("A2: lex_parse_line OK (ctx->cmds != NULL)");
+
+// 	if (expand_all(ctx))
+// 	{
+// 		// dbg("B: expand_all failed -> freeing cmds");
+// 		free_cmds(ctx->cmds);
+// 		ctx->cmds = NULL;
+// 		return (1);
+// 	}
+// 	st = run_heredocs(ctx);
+// 	if (st != 0)
+// 	{
+// 		// dbg("C: heredocs failed/aborted -> freeing cmds");
+// 		free_cmds(ctx->cmds);
+// 		ctx->cmds = NULL;
+// 		if (st == 2)
+// 		{
+// 			// dbg("C2: heredoc returned 2");
+// 			return (ctx->exit_status);
+// 		}
+// 		// dbg("C1: heredoc returned nonzero");
+// 		return (1);
+// 	}
+// 	exec_cmds(ctx);
+// 	// dbg("E: process_line end (after exec_cmds)");
+// 	return (ctx->exit_status);
+// }

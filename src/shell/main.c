@@ -9,6 +9,7 @@ static void	shell_init(char **envp_in, t_shell_ctx *ctx)
 	ctx->prev_fd = -1;
 	ctx->pids = NULL;
 	ctx->envp = dup_env(envp_in);
+	rl_bind_key('\t', rl_insert);
 	tcgetattr(STDIN_FILENO, &ctx->term_orig);
 	ms_set_termios(0);
 	rl_catch_signals = 0;
@@ -29,7 +30,6 @@ static int	shell_loop(t_shell_ctx *ctx)
 			st = EXIT_REQ_BASE + (ctx->exit_status & 255);
 			break ;
 		}
-		// trim_cr(ctx->line);
 		st = process_pasted_lines(ctx);
 		free(ctx->line);
 		if (st >= EXIT_REQ_BASE)
@@ -55,7 +55,6 @@ void	free_ctx(t_shell_ctx *ctx)
 	free_env(ctx->envp);
 	ctx->envp = NULL;
 	free_cmds(ctx->cmds);
-	// free(ctx->line);
 	if (ctx->current_subline)
 		free(ctx->current_subline);
 	if (ctx->pids)

@@ -19,7 +19,11 @@ int	count_cmds(t_cmd *cmd)
 
 static int	run_single_builtin(t_cmd *cmd, t_shell_ctx *ctx)
 {
-	if (!cmd || !cmd->argv || !cmd->argv[0])
+	if (!cmd)
+		return (-1);
+	if ((!cmd->argv || !cmd->argv[0]) && cmd->redirs)
+		return (exec_builtin(cmd, ctx));
+	if (!cmd->argv || !cmd->argv[0])
 		return (0);
 	if (!is_builtin_name(cmd->argv[0]))
 		return (-1);
@@ -28,8 +32,8 @@ static int	run_single_builtin(t_cmd *cmd, t_shell_ctx *ctx)
 
 int	exec_pipeline(t_shell_ctx *ctx)
 {
-	int cmd_count;
-	int status;
+	int	cmd_count;
+	int	status;
 
 	if (!ctx->cmds)
 		return (0);

@@ -8,6 +8,12 @@ commands.
 The goal is to reproduce the core behavior of a POSIX-style shell for the 42
 `minishell` project, not to replace `bash` completely.
 
+
+
+https://github.com/user-attachments/assets/0c22b530-59b6-476d-b6a9-7ad3dc88ae95
+
+
+
 ## Features
 
 - Interactive prompt powered by GNU Readline
